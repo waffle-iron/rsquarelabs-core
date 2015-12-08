@@ -2,3 +2,6 @@
 README.txt
 setup.py
 rsquarelabs/__init__.py
+rsquarelabs/gromacs/__init__.py
+rsquarelabs/gromacs/views.py
+rsquarelabs/jmol/__init__.py

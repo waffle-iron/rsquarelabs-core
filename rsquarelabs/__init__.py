@@ -1,4 +1,3 @@
 __author__ = 'rrmerugu'
-
-import gromacs
-import jmol
+# import rsquarelabs.gromacs
+# import rsquarelabs.jmol

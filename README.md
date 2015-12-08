@@ -7,8 +7,10 @@ This is the library of automation pipeline modules
 
 ## Usage
 ```
+#first: import package 
 from rsquarelabs import gromacs
 
-
+#second: call the method you want to execute
+gromacs.create_water_box()
 
 ```

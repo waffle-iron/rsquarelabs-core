@@ -1,2 +1,2 @@
 __author__ = 'rrmerugu'
-import views
+from .views import *
