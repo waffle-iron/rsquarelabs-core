@@ -1,0 +1,7 @@
+# Created by .ignore support plugin (hsz.mobi)
+*.pyc
+.idea/*
+
+.idea/dictionaries/rrmerugu.xml
+build/
+dist/
