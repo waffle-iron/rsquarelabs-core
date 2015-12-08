@@ -8,7 +8,7 @@ from distutils.core import setup
 readme = open('README.txt').read()
 
 setup(name='rsquarelabs',
-version='0.0.1',
+version='0.0.1a',
 description='This is the library of automation pipeline modules developed at RSQUARE LABS.',
 long_description= readme,
 author='Ravi RT Merugu',
