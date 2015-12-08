@@ -1,5 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 *.pyc
+.idea/**
 .idea/*
 
 .idea/dictionaries/rrmerugu.xml

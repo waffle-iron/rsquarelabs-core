@@ -14,3 +14,9 @@ from rsquarelabs import gromacs
 gromacs.create_water_box()
 
 ```
+
+
+
+### Features 
+1. Start a light weight webserver
+2. commands for /usr/local/bin/

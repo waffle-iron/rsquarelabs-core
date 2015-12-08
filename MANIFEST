@@ -3,5 +3,6 @@ README.txt
 setup.py
 rsquarelabs/__init__.py
 rsquarelabs/gromacs/__init__.py
-rsquarelabs/gromacs/views.py
+rsquarelabs/gromacs/protein_lig_min.py
+rsquarelabs/gromacs/protein_min.py
 rsquarelabs/jmol/__init__.py
