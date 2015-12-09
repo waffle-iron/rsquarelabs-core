@@ -5,4 +5,5 @@ rsquarelabs/__init__.py
 rsquarelabs/gromacs/__init__.py
 rsquarelabs/gromacs/protein_lig_min.py
 rsquarelabs/gromacs/protein_min.py
-rsquarelabs/jmol/__init__.py
+rsquarelabs/websuite/__init__.py
+rsquarelabs/websuite/rmv.py
