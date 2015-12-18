@@ -3,6 +3,7 @@
 .idea/**
 .idea/*
 rsquarelabs_code.egg-info/*
+rsquarelabs_core.egg-info
 
 .idea/dictionaries/rrmerugu.xml
 build/
