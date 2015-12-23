@@ -25,3 +25,10 @@ gromacs.create_water_box()
 
 
 
+
+
+### Developers Notes 
+1. bin/ - contains the scripts that can be moved to /usr/local/bin or /usr/bin
+2. docs/ - contains the documentation of the tool
+3. rsquarelabs_core/ - contains the tools/modules 
+4. examples/ - sample usage scripts 

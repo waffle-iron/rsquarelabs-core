@@ -1,4 +1,4 @@
 __author__ = 'rrmerugu'
 
-from .rmv import runapp
+from .rmv import server_run
 from . import jsmol, static

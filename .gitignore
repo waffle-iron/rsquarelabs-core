@@ -2,9 +2,11 @@
 *.pyc
 .idea/**
 .idea/*
+experiments
 rsquarelabs_code.egg-info/*
 rsquarelabs_core.egg-info
 
 .idea/dictionaries/rrmerugu.xml
+
 build/
 dist/
