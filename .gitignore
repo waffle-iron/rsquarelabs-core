@@ -2,7 +2,7 @@
 *.pyc
 .idea/**
 .idea/*
-experiments
+experiments/*
 rsquarelabs_code.egg-info/*
 rsquarelabs_core.egg-info
 
