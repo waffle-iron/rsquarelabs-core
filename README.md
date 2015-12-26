@@ -1,4 +1,7 @@
 # rsquarelabs
+
+[![Documentation Status](https://readthedocs.org/projects/rsquarelabs-core/badge/?version=dev)](http://rsquarelabs-core.readthedocs.org/en/dev/?badge=dev)
+
 This is the library of automation pipeline modules 
 
 
