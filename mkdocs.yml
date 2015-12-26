@@ -1,0 +1,5 @@
+site_name: RSQUARELABS CORE
+pages:
+- Home: index.md
+- Testing Notes: testing-notes.md
+theme: readthedocs
