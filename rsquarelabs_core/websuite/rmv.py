@@ -119,15 +119,20 @@ def projects_list(project_id):
             # found this :D
             pass
             print "Found this :D"
-            project_log = open(os.path.join(project['project_path'], "%s.log"%project['project_type'] )).read()
-            project_config = open(os.path.join(project['project_path'], "%s.json"%project['project_type'] )).read()
-            project_user_email = project['project_user_email']
-            project_log_updated_time = os.path.getmtime(os.path.join(project['project_path'], "%s.log"%project['project_type'] ))
+            try:
+                project_log = open(os.path.join(project['project_path'], "%s.log"%project['project_type'] )).read()
+                project_config = open(os.path.join(project['project_path'], "%s.json"%project['project_type'] )).read()
+                project_log_updated_time = os.path.getmtime(os.path.join(project['project_path'], "%s.log"%project['project_type'] ))
+                project_log_updated_time = datetime.fromtimestamp(project_log_updated_time).strftime('%Y-%m-%d %H:%M:%S')
 
-            project_log_updated_time = datetime.fromtimestamp(project_log_updated_time).strftime('%Y-%m-%d %H:%M:%S')
+            except Exception as e:
+                print e
+
+
+            project_user_email = project['project_user_email']
             print project_log
     content =  open(os.path.join(HTML_DIR, 'project-status.html')).read()
-    return template(content, project_log=project_log, project_config=project_config, project_user_email = project_user_email, project_log_updated_time=project_log_updated_time)
+    return template(content, project_log=project_log, project_config=project_config, project_user_email = project_user_email, project_log_updated_time=project_log_updated_time, project_path=project_path)
 
 
 
