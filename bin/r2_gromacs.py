@@ -21,7 +21,7 @@ RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
 TOOL_NAME = "r2_gromacs"
 
 def current_date():
-    return datetime.now().strftime("%Y-%m-%d %H:%M")
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def main():
     # Get the arguments list
@@ -63,17 +63,17 @@ def main():
         project_data["project_type"] = TOOL_NAME
 
         project_data['project_config'] = os.path.join(project_data["project_path"], 'r2_gromacs.json')
+        project_data['project_log'] = os.path.join(project_data["project_path"], 'r2_gromacs.log')
 
-        if os.path.exists(project_data['project_config']):
+
+        if os.path.exists(project_data['project_config']) or os.path.exists(project_data['project_log']) :
             print "ERROR: A Project already exist in this folder"
             print "============================================="
             exit()
         else:
             fh = open(project_data['project_config'] , 'w', 0755)
-            fh.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
-
-
-
+            fh_log = open(project_data['project_log'],'w', 0755)
+            fh_log.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
 
 
 

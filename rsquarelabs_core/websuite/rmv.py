@@ -6,7 +6,7 @@ import bottle as bottle2
 from rsquarelabs_core.utils import start_the_process
 import json
 
-
+from datetime import datetime
 BASE_DIR    = os.path.join(os.path.dirname(os.path.dirname(__file__)),'websuite')
 STATIC_DIR  = os.path.join(BASE_DIR, 'static')
 
@@ -89,12 +89,43 @@ def docs():
 
 @app.route('/websuite/projects.html')
 def projects_list():
+    projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
+    projects_data = json.loads(projects_list)
+    content =  open(os.path.join(HTML_DIR, 'projects.html')).read()
+    return template(content, projects_list=projects_data)
+
+
+@app.route('/websuite/project/:project_id')
+def projects_list(project_id):
+
+    qs_string = request.query_string
+    project_path = None
+    if 'project_path=' in qs_string:
+        project_path = qs_string.split('project_path=')[1].split('&')[0]
+
+    print project_id
+    print project_path
+
 
     projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
     projects_data = json.loads(projects_list)
 
-    content =  open(os.path.join(HTML_DIR, 'projects.html')).read()
-    return template(content, projects_list=projects_data)
+
+    for project in projects_data['projects']:
+        if project['project_path'] == project_path and project['project_id'] == project_id:
+            # found this :D
+            pass
+            print "Found this :D"
+            project_log = open(os.path.join(project['project_path'], "%s.log"%project['project_type'] )).read()
+            project_config = open(os.path.join(project['project_path'], "%s.json"%project['project_type'] )).read()
+            project_user_email = project['project_user_email']
+            project_log_updated_time = os.path.getmtime(os.path.join(project['project_path'], "%s.log"%project['project_type'] ))
+
+            project_log_updated_time = datetime.fromtimestamp(project_log_updated_time).strftime('%Y-%m-%d %H:%M:%S')
+            print project_log
+    content =  open(os.path.join(HTML_DIR, 'project-status.html')).read()
+    return template(content, project_log=project_log, project_config=project_config, project_user_email = project_user_email, project_log_updated_time=project_log_updated_time)
+
 
 
 @app.route('/docs/filebrowser')
