@@ -4,6 +4,8 @@ from bottle import Bottle, request, static_file, template, redirect
 import os
 import bottle as bottle2
 from rsquarelabs_core.utils import start_the_process
+import json
+
 
 BASE_DIR    = os.path.join(os.path.dirname(os.path.dirname(__file__)),'websuite')
 STATIC_DIR  = os.path.join(BASE_DIR, 'static')
@@ -13,6 +15,10 @@ DOCS_DIR    = os.path.join(STATIC_DIR, 'docs')
 CSS_DIR     = os.path.join(STATIC_DIR, 'css')
 JS_DIR      = os.path.join(STATIC_DIR, 'js')
 
+
+USER_HOME_FOLDER = os.getenv('HOME')
+RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
+RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
 
 # print BASE_DIR
 # print STATIC_DIR
@@ -79,6 +85,16 @@ def goto_rmv():
 def docs():
     content =  open(os.path.join(DOCS_DIR, 'rmv.html')).read()
     return template(content)
+
+
+@app.route('/websuite/projects.html')
+def projects_list():
+
+    projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
+    projects_data = json.loads(projects_list)
+
+    content =  open(os.path.join(HTML_DIR, 'projects.html')).read()
+    return template(content, projects_list=projects_data)
 
 
 @app.route('/docs/filebrowser')

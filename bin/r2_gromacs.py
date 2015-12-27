@@ -12,12 +12,13 @@ sys.argv
 
 __VERSION__ = "0.1dev"
 
-HOME_FOLDER = os.getenv('HOME')
-RSQ_PROJECTS_HOME = os.path.join(HOME_FOLDER, 'rsquarelabsProjects')
+USER_HOME_FOLDER = os.getenv('HOME')
+RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
 RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
-RSQ_HOME = os.path.join(HOME_FOLDER, '.rsquarelabs')
+RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
 RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
 
+TOOL_NAME = "r2_gromacs"
 
 def current_date():
     return datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -34,30 +35,45 @@ def main():
         
 
 
+        current_folder =  os.getcwd()
 
-
-        if os.path.exists(RSQ_PROJECTS_HOME):
-            pass
-        else:
-            print "CREATING the Default Project Director : %s " %RSQ_PROJECTS_HOME
-            os.mkdir(RSQ_PROJECTS_HOME, 0755)
-            print "CREATED the Default Project Director : %s " %RSQ_PROJECTS_HOME
-            print "INFO: These messages occur only for the very first time"
-
-        if os.path.exists(RSQ_PROJECTS_CONFIG):
-            pass
-        else:
-            print "CREATING the Default Project Director config: %s " %RSQ_PROJECTS_CONFIG
-            fh = open(RSQ_PROJECTS_CONFIG , 'w', 0755)
-            fh.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
-            print "CREATED the Default Project Director config: %s " %RSQ_PROJECTS_CONFIG
-            print "INFO: These messages occur only for the very first time"
+        # if os.path.exists(RSQ_PROJECTS_HOME):
+        #     pass
+        # else:
+        #     print "CREATING the Default Project Director : %s " %RSQ_PROJECTS_HOME
+        #     os.mkdir(RSQ_PROJECTS_HOME, 0755)
+        #     print "CREATED the Default Project Director : %s " %RSQ_PROJECTS_HOME
+        #     print "INFO: These messages occur only for the very first time"
+        #
+        # if os.path.exists(RSQ_PROJECTS_CONFIG):
+        #     pass
+        # else:
+        #     print "CREATING the Default Project Director config: %s " %RSQ_PROJECTS_CONFIG
+        #     fh = open(RSQ_PROJECTS_CONFIG , 'w', 0755)
+        #     fh.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
+        #     print "CREATED the Default Project Director config: %s " %RSQ_PROJECTS_CONFIG
+        #     print "INFO: These messages occur only for the very first time"
 
         project_data = {}
         project_data["project_name"] = ""
         project_data["project_tags"] = ""
         project_data["project_user_email"] = ""
         project_data["project_id"] = ""
+        project_data["project_path"] = os.getcwd()
+        project_data["project_type"] = TOOL_NAME
+
+        project_data['project_config'] = os.path.join(project_data["project_path"], 'r2_gromacs.json')
+
+        if os.path.exists(project_data['project_config']):
+            print "ERROR: A Project already exist in this folder"
+            print "============================================="
+            exit()
+        else:
+            fh = open(project_data['project_config'] , 'w', 0755)
+            fh.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
+
+
+
 
 
 
