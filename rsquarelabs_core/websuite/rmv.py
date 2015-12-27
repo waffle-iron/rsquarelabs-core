@@ -109,7 +109,10 @@ def projects_list(project_id):
 
     projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
     projects_data = json.loads(projects_list)
-
+    project_log_updated_time = None
+    project_log = None
+    project_user_email = None
+    project_config = None
 
     for project in projects_data['projects']:
         if project['project_path'] == project_path and project['project_id'] == project_id:
