@@ -2,7 +2,7 @@ __author__ = 'rrmerugu'
 
 from bottle import Bottle, request, static_file, template, redirect
 import os
-
+import bottle as bottle2
 from rsquarelabs_core.utils import start_the_process
 
 BASE_DIR    = os.path.join(os.path.dirname(os.path.dirname(__file__)),'websuite')
@@ -25,8 +25,8 @@ JS_DIR      = os.path.join(STATIC_DIR, 'js')
 # print index_html
 
 app = Bottle()
-
-
+#
+bottle2.TEMPLATE_PATH.insert(0,HTML_DIR)
 
 
 @app.route('/websuite/rmv.html')
@@ -71,12 +71,21 @@ def index():
     content = open(os.path.join(HTML_DIR, 'websuite_index.html')).read()
     return template(content)
 
+@app.route('/docs/rmv')
+def goto_rmv():
+    redirect('/docs/rmv.html')
+
 @app.route('/docs/rmv.html')
 def docs():
     content =  open(os.path.join(DOCS_DIR, 'rmv.html')).read()
     return template(content)
 
-@app.route('/websuite/filebrowser')
+
+@app.route('/docs/filebrowser')
+def goto_filebrowser():
+    redirect('/docs/filebrowser.html')
+
+@app.route('/websuite/filebrowser.html')
 def filebrowser():
     content = open(os.path.join(HTML_DIR, 'file_browser.html')).read()
     folder_path = os.path.dirname(__file__)
