@@ -6,7 +6,7 @@ pages:
 - Tutorials:
     - RSQ-GROMACS: tutorials/rsq-gromacs.md
     - RSQ-QSAR: tutorials/rsq-qsar.md
-    - RSQ-MOLECULAR-VIEWER: tutorials/molecular-viewer.md
+    - RSQ-MOLECULAR-VIEWER: tutorials/rsq-molecular-viewer.md
 - Dev Notes:
     - Coding: /dev-notes/coding.md
 
