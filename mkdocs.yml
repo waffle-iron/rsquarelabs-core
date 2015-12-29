@@ -1,8 +1,13 @@
 site_name: RSQUARELABS CORE
+site_url: http://docs.rsquaelabs.org
 docs_dir: docs
 pages:
 - Home: index.md
-- Tutorials: tutorials/
-- Dev Notes: dev-notes/
+- Tutorials:
+    - RSQ-GROMACS: tutorials/rsq-gromacs.md
+    - RSQ-QSAR: tutorials/rsq-qsar.md
+    - RSQ-MOLECULAR-VIEWER: tutorials/molecular-viewer.md
+- Dev Notes:
+    - Coding: /dev-notes/coding.md
 
 theme: readthedocs
