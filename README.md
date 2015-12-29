@@ -1,12 +1,14 @@
 # rsquarelabs
 
-[![Documentation Status](https://readthedocs.org/projects/rsquarelabs-core/badge/?version=dev)](http://rsquarelabs-core.readthedocs.org/en/dev/?badge=dev)
+[![Documentation Status](https://readthedocs.org/projects/rsquarelabs-core/badge/?version=dev)](http://docs.rsquarelabs.org/en/dev/?badge=dev)
 
 This is the library of automation pipeline modules 
 
 
 ## Installing the package
 `pip install rsquarelabs-core`
+
+**we currently support python 2.7 only**
 
 ## Usage
 ```
