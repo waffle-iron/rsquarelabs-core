@@ -1,5 +1,7 @@
 site_name: RSQUARELABS CORE
 pages:
 - Home: index.md
-- Testing Notes: testing-notes.md
+- Tutorials: tutorials/
+- Dev Notes: dev-notes/
+
 theme: readthedocs
