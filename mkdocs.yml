@@ -1,5 +1,6 @@
 site_name: RSQUARELABS CORE
-site_url: http://docs.rsquaelabs.org
+site_url: http://docs.rsquarelabs.org
+canonical_url: http://docs.rsquarelabs.org
 docs_dir: docs
 pages:
 - Home: index.md
@@ -12,3 +13,4 @@ pages:
 
 theme: readthedocs
 copyright: Copyright &copy; 2016 <a href="https://twitter.com/rrmerugu">Ravi RT Merugu</a>
+google_analytics: ['UA-71847416-1', 'rsquarelabs.org']
