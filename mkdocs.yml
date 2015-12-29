@@ -8,9 +8,10 @@ pages:
     - RSQ-GROMACS: tutorials/rsq-gromacs.md
     - RSQ-QSAR: tutorials/rsq-qsar.md
     - RSQ-MOLECULAR-VIEWER: tutorials/rsq-molecular-viewer.md
-- Dev Notes:
-    - Coding: devnotes/coding.md
-
+- Dev Guides:
+    - Django: dev-guides/django.md
+    - Python27: dev-guides/python27.md
+    - Editor Preferences: dev-guides/editors.md
 theme: readthedocs
 copyright: Copyright &copy; 2016 <a href="https://twitter.com/rrmerugu">Ravi RT Merugu</a>
 google_analytics: ['UA-71847416-1', 'rsquarelabs.org']
