@@ -1,4 +1,5 @@
 site_name: RSQUARELABS CORE
+docs_dir: docs
 pages:
 - Home: index.md
 - Tutorials: tutorials/
