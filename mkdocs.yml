@@ -8,6 +8,7 @@ pages:
     - RSQ-QSAR: tutorials/rsq-qsar.md
     - RSQ-MOLECULAR-VIEWER: tutorials/rsq-molecular-viewer.md
 - Dev Notes:
-    - Coding: /dev-notes/coding.md
+    - Coding: devnotes/coding.md
 
 theme: readthedocs
+copyright: Copyright &copy; 2016 <a href="https://twitter.com/rrmerugu">Ravi RT Merugu</a>
