@@ -42,7 +42,7 @@ gromacs.create_water_box()
 1. Start a light weight webserver
 2. commands for /usr/local/bin/
 
-## Why RSQUARELABS CORE
+## Why rsquarelabs-core
 1. scaffolding the project
 2. project management
 3. Tracking the project
