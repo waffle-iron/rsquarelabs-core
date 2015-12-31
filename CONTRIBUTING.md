@@ -19,7 +19,7 @@ It might be important to distinguish them when you are reading the commit histor
 We would like to hear about it. Please [submit an issue][new-issue] on GitHub and we will follow up. Even better, we would appreciate a [Pull Request][new-pr] with a fix for it!
 
 - If the bug was found in a release, it is best to base your work on `master` and submit your PR against it.
-- If the bug was found on `next` (the development branch), base your work on `next` and submit your PR against it.
+- If the bug was found on `dev` (the development branch), base your work on `dev` and submit your PR against it.
 
 Please follow the [Pull Request Guidelines][new-pr].
 
@@ -50,12 +50,12 @@ The more informations you give us, the more able to help we will be!
 
 ### Submitting a Pull Request
 
-- First of all, make sure to base your work on the `next` branch (the development branch):
+- First of all, make sure to base your work on the `dev` branch (the development branch):
 
   ```
-  # a bugfix branch for next would be prefixed by fix/
+  # a bugfix branch for dev would be prefixed by fix/
   # a bugfix branch for master would be prefixed by hotfix/
-  $ git checkout -b feature/my-feature next
+  $ git checkout -b feature/my-feature dev
   ```
 
 - Please create commits containing **related changes**. For example, two different bugfixes should produce two separate commits. A feature should be made of commits splitted by **logical chunks** (no half-done changes). Use your best judgement as to how many commits your changes require.
@@ -68,11 +68,11 @@ The more informations you give us, the more able to help we will be!
 
 - Make sure the linter does not throw any error: `make lint`.
 
-- Rebase your commits. It may be that new commits have been introduced on `next`. Rebasing will update your branch with the most recent code and make your changes easier to review:
+- Rebase your commits. It may be that new commits have been introduced on `dev`. Rebasing will update your branch with the most recent code and make your changes easier to review:
 
   ```
   $ git fetch
-  $ git rebase origin/next
+  $ git rebase origin/dev
   ```
 
 - Push your changes:
@@ -81,14 +81,14 @@ The more informations you give us, the more able to help we will be!
   $ git push origin -u feature/my-feature
   ```
 
-- Open a pull request against the `next` branch.
+- Open a pull request against the `dev` branch.
 
 - If we suggest changes:
   - Please make the required updates (after discussion if any)
   - Only create new commits if it makes sense. Generally, you will want to amend your latest commit or rebase your branch after the new changes:
 
     ```
-    $ git rebase -i next
+    $ git rebase -i dev
     # choose which commits to edit and perform the updates
     ```
 
