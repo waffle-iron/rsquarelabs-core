@@ -3,19 +3,29 @@
 
 The best way to contribute to the roadmap and feature discussions is by talking with the RSQUARELABS Team and rsquarelabs-core Community in realtime through the Gitter chat, or by starting a new issue as a discussion thread.
 
-##Got a question or problem?
+- [Got a Question or Problem](#gaqp)
+- [Browsing the code](#code)
+- [Found a Bug](#bug)
+- [Want a feature](#want-feature)
+- [Submission Guidelines](#guidelines)
+	- [Submitting an issue](#submit-issue)
+	- [Submitting a Pull Request](#submit-pullrequest)
+- [Git Commit Guidelines](#commit-guidelines)
+ 
+
+##<a name="gaqp"></a> Got a question or problem?
 Discuss it on the [Google Group](https://groups.google.com/d/forum/rsquarelabs-core
 ) or chat with us on [Gitter](https://gitter.im/rsquarelabs/rsquarelabs-core).
 
 
-##Browsing the code?
+##<a name="code"></a> Browsing the code?
 We work on two branches: 
 - `master` for stable, released code
 - `dev`, a development branch. 
 
 It might be important to distinguish them when you are reading the commit history searching for a feature or a bugfix, or when you are unsure of where to base your work from when contributing.
 
-##Found a bug?
+##<a name="bug"></a>Found a bug?
 We would like to hear about it. Please [submit an issue][new-issue] on GitHub and we will follow up. Even better, we would appreciate a [Pull Request][new-pr] with a fix for it!
 
 - If the bug was found in a release, it is best to base your work on `master` and submit your PR against it.
@@ -24,15 +34,15 @@ We would like to hear about it. Please [submit an issue][new-issue] on GitHub an
 Please follow the [Pull Request Guidelines][new-pr].
 
 
-### Want a feature?
+##<a name="want-feature"></a> Want a feature?
 
 Feel free to request a feature by [submitting an issue][new-issue] on GitHub and open the discussion.
 
 If you'd like to implement a new feature, please consider opening an issue first to talk about it. It may be that somebody is already working on it, or that there are particular issues that you should be aware of before implementing the change. If you are about to open a Pull Request, please make sure to follow the [submissions guidelines][new-pr].
 
-## Submission Guidelines
+## <a name="guidelines"></a>Submission Guidelines
 
-### Submitting an issue
+### <a name="submit-issue"></a>Submitting an issue
 
 Before you submit an issue, search the archive, maybe you will find that a similar one already exists.
 
@@ -48,7 +58,7 @@ If you are submitting an issue for a bug, please include the following:
 
 The more informations you give us, the more able to help we will be!
 
-### Submitting a Pull Request
+### <a name="submit-pullrequest"></a>Submitting a Pull Request
 
 - First of all, make sure to base your work on the `dev` branch (the development branch):
 
@@ -99,10 +109,31 @@ The more informations you give us, the more able to help we will be!
     $ git push origin feature/my-feature -f
     ```
 
+##<a name="commit-guidelines"></a>Git Commit Guidelines
+We have very precise rules over how our git commit messages can be formatted. This leads to more readable messages that are easy to follow when looking through the project history. But also, we use the git commit messages to generate the AngularJS change log.
+
+The commit message formatting can be added using a typical git workflow or through the use of a CLI wizard ([Commitizen](https://github.com/commitizen/cz-cli)). To use the wizard, run npm run commit in your terminal after staging your changes in git.
+
+Every Commit must be one of the following Type :
+
+
+* **feat**: A new feature
+* **fix**: A bug fix
+* **docs**: Documentation only changes
+* **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing
+  semi-colons, etc)
+* **refactor**: A code change that neither fixes a bug nor adds a feature
+* **perf**: A code change that improves performance
+* **test**: Adding missing tests
+* **chore**: Changes to the build process or auxiliary tools and libraries such as documentation
+  generation
+  
+
+----------
 We are eager to see your contribution!
+
+We collect all requests and ideas and share with the community for feedback, you should watch the milestones and issues for further roadmap updates.
+
 
 [new-issue]: #submitting-an-issue
 [new-pr]: #submitting-a-pull-request
-
-
-We collect all requests and ideas and share with the community for feedback, you should watch the milestones and issues for further roadmap updates.
