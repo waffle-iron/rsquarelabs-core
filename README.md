@@ -8,12 +8,24 @@ This is the library of automation pipeline modules
 [Documentation](http://docs.rsquarelabs.org/) |
 [Installation](http://docs.rsquarelabs.org/en/dev/install/) |
 [Mailing List](https://groups.google.com/d/forum/rsquarelabs-core) |
-[Gitter Chat](https://gitter.im/rsquarelabs/rsquarelabs-core) |
+[Gitter Chat](https://gitter.im/rsquarelabs/rsquarelabs-core) 
 
 
-## Installing the package
-`pip install rsquarelabs-core`
+## Summary
+- [**Install**](#install) 
+- [**Features**](#features)
+- [**Usage**](#usage)
+- [**Why rsquarelabs-core?**](#why-rsquarelabs-core)
+- [**Community**](#community)
+- [**Roadmap**](#roadmap)
+- [**Support**](#support)
+- [**License**](#license)
 
+
+## Install 
+```
+pip install rsquarelabs-core
+```
 **we currently support python 2.7 only**
 
 ## Usage
@@ -26,22 +38,39 @@ gromacs.create_water_box()
 
 ```
 
-
-
-### Features 
+## Features 
 1. Start a light weight webserver
 2. commands for /usr/local/bin/
 
+## Why RSQUARELABS CORE
+1. scaffolding the project
+2. project management
+3. Tracking the project
+
+
+## Community
+Community
+
+
+## RoadMap
+You can find a detailed Roadmap of rl-core on the Wiki. 
+
+## Support 
+We support universties and research labs to install, configure and setup rl-core
+
+## License
 
 
 
 
 
 
-### Developers Notes 
-1. bin/ - contains the scripts that can be moved to /usr/local/bin or /usr/bin
-2. docs/ - contains the documentation of the tool
-3. rsquarelabs_core/ - contains the tools/modules 
-4. examples/ - sample usage scripts 
+
+
+
+
+
+
+
 
 
