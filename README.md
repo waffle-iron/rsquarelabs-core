@@ -4,6 +4,12 @@
 
 This is the library of automation pipeline modules 
 
+[Website](http://rsquarelabs.org) |
+[Documentation](http://docs.rsquarelabs.org/) |
+[Installation](http://docs.rsquarelabs.org/en/dev/install/) |
+[Mailing List](https://groups.google.com/d/forum/rsquarelabs-core) |
+[Gitter Chat](https://gitter.im/rsquarelabs/rsquarelabs-core) |
+
 
 ## Installing the package
 `pip install rsquarelabs-core`
@@ -37,3 +43,5 @@ gromacs.create_water_box()
 2. docs/ - contains the documentation of the tool
 3. rsquarelabs_core/ - contains the tools/modules 
 4. examples/ - sample usage scripts 
+
+
