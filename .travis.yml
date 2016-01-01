@@ -6,7 +6,7 @@ python:
 
 
 
-#before_install:
+before_install:
   - echo "deb http://cz.archive.ubuntu.com/ubuntu precise main universe" | sudo tee -a /etc/apt/sources.list
   - sudo apt-get update -qq
   - sudo apt-get install gromacs
