@@ -5,7 +5,7 @@ python:
 
 
 before_install:
-  - sudo apt=get update cmake -y
+  - sudo apt-get update cmake -y
   - sudo apt-get install -y wget build-essential cmake file libxml2-dev libboost-dev
   - wget ftp://ftp.gromacs.org/pub/gromacs/gromacs-4.6.5.tar.gz
   - tar -xf gromacs-4.6.5.tar.gz
