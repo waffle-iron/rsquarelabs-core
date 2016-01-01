@@ -1,12 +1,12 @@
-#technical Stack
+#Technical Stack
 
 ## rsquarelabs-core
 
 rsquarelabs-core is the lighter version that can be installed on the client machine
 
-- python - the core is built on this
-- bottle.py - lightweight webserver that runs RMV,
-- bootstrap3 - responsive Framework to build the User Interface
+- [python27](https://www.python.org/download/releases/2.7/) - the core is built on this
+- [bottle.py](http://bottlepy.org/) - lightweight webserver that runs RMV,
+- [bootstrap3](http://getbootstrap.com/) - responsive Framework to build the User Interface
 
 
 ## rsquarelabs-xyz

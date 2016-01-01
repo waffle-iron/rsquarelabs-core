@@ -60,7 +60,7 @@ Don't know what you want to help out with? Well here are some areas that we coul
 - rsquarelabs-core scientific thoughts,
 - rsquarelabs-core [technical stack](docs/notes/technical-stack.md)
 - rsquarelabs-core code - see [milestones](https://github.com/rsquarelabs/rsquarelabs-core/milestones) and [issues](https://github.com/rsquarelabs/rsquarelabs-core/issues) for more
-- rsquarelabs-core [documentation](http://docs.rsquarelabs.org), tutorials and examples
+- rsquarelabs-core [documentation](http://docs.rsquarelabs.org), [tutorials](docs/tutorials/index.md) and [examples](docs/examples/index.md)
 - rsquarelabs-core [website](http://rsquarelabs.org)
 - If you want to join our community as a contributor, please leave a message as [@rrmerugu](https://twitter.com/rrmerugu)
 

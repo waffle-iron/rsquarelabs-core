@@ -5,13 +5,14 @@ docs_dir: docs
 pages:
 - Home: index.md
 - Tutorials:
-    - RSQ-GROMACS: tutorials/rsq-gromacs.md
-    - RSQ-QSAR: tutorials/rsq-qsar.md
-    - RSQ-MOLECULAR-VIEWER: tutorials/rsq-molecular-viewer.md
+    - index: tutorials/index.md
+- Examples:
+    - index: examples/index.md
 - Dev Guides:
-    - Django: dev-guides/django.md
-    - Python27: dev-guides/python27.md
     - Editor Preferences: dev-guides/editors.md
+- Notes:
+    - Cloud Computing in CADD: notes/cloud-computing.md
+    - Technical Stack: notes/technical-stack.md
 theme: readthedocs
 copyright: Copyright &copy; 2016 <a href="https://twitter.com/rrmerugu">Ravi RT Merugu</a>
 google_analytics: ['UA-71847416-1', 'rsquarelabs.org']
