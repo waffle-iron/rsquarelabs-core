@@ -1,42 +1,45 @@
-#Editor Preferences
+#Setting up the Editors
 
 
-So this section tells you about setting up the development environment. 
-Remember we only code the tools in **Python27**. 
 
-## First things first 
+
+## FrontEnd Development
+
+### 1. Atom.io
+
+I personally use atom editor for UI development. These are some packages I install in Atom to make to more powerful.
+
+- [emmet-atom](https://github.com/emmetio/emmet-atom)
+- [JSlint](https://atom.io/packages/jshint)
+- [atom-bootstrap3](https://github.com/f/atom-bootstrap3)
+- [angularjs](https://atom.io/packages/angularjs)
+- [markdown-preview](https://github.com/atom/markdown-preview)
+- [atom-beautify](https://atom.io/packages/atom-beautify)
+
+## Backend Development
+
+So this section tells you about setting up the development environment. Remember we only code our tools in **Python27**, because our tools are meant to run on only Unix/Linux flavored machines.
+
+### First things first
 
 1. Install Python27 via yum or apt-get or compile it yourself :)
 2. We Prefer Linux, Mac or Unix based family as Operating System
 
 
-Just wanted to remind **we code our tools only in Python-2.7 and on Unix/Linux flavored machines**
+> Code everything in and for Python-2.7
 
-## Basic rules 
-
-1. Set a Virtual Environment(virtualenv)
-2. Change the default interpreter to your virtualenv
+> Do the development in an isolated VIRTUALENV
 
 
-
-## PyCharm
+### 1.PyCharm
 
 I personally use [PyCharm] by Jetbrains, its the best editor for me :) and for most of the python developers :).
 
-Here is how you change interpreter in Pycharm
-
-![PyCharm](https://www.jetbrains.com/img/webhelp/idea/py_project_interpreter_settings.png)
 
 
+### 2.Eclipse - pydev
 
-## Eclipse - pydev 
-
-The classic editor, i taught myself coding in this editor, the best with lot of tools :) 
- 
-Here is how you change interpreter in Eclipse 
-
-![Eclipse](http://www.pydev.org/images/interpreter.png)
-
+The classic editor, i taught myself coding in this editor, the best with lot of tools :)
 
 
 
