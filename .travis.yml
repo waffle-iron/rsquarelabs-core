@@ -8,6 +8,10 @@ python:
 
 before_install:
   - grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/*
+  - deb http://cz.archive.ubuntu.com/ubuntu precise main universe
+  - sudo apt-get update
+  - sudo apt-get install gromacs
+
   # - sudo apt-get update
   # - sudo apt-get install -y wget build-essential cmake file libxml2-dev libboost-dev
   # - wget ftp://ftp.gromacs.org/pub/gromacs/gromacs-4.6.5.tar.gz
@@ -22,7 +26,7 @@ before_install:
   # - pip install codecov
 
 script:
-  - mdrun -v
+  - uname
 
 after_success:
   - codecov
