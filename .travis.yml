@@ -8,8 +8,10 @@ python:
 
 before_install:
   - echo "deb http://cz.archive.ubuntu.com/ubuntu precise main universe" | sudo tee -a /etc/apt/sources.list
-  - sudo apt-get update -qq
+  - sudo apt-get update
   - sudo apt-get install gromacs
+
+  ## the below code uses manual installatiion which we might need for multiple versions of gromacs(incase)
   # - sudo apt-get update
   # - sudo apt-get install -y wget build-essential cmake file libxml2-dev libboost-dev
   # - wget ftp://ftp.gromacs.org/pub/gromacs/gromacs-4.6.5.tar.gz

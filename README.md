@@ -1,8 +1,8 @@
 # rsquarelabs-core
 
-[![Documentation Status](https://readthedocs.org/projects/rsquarelabs-core/badge/?version=dev)](http://docs.rsquarelabs.org/en/dev/?badge=dev)
+[![Build Status](https://travis-ci.org/rsquarelabs/rsquarelabs-core.svg?branch=dev)](https://travis-ci.org/rsquarelabs/rsquarelabs-core)
 [![Requirements Status](https://requires.io/github/rsquarelabs/rsquarelabs-core/requirements.svg?branch=dev)](https://requires.io/github/rsquarelabs/rsquarelabs-core/requirements/?branch=dev)
-
+[![Documentation Status](https://readthedocs.org/projects/rsquarelabs-core/badge/?version=dev)](http://docs.rsquarelabs.org/en/dev/?badge=dev)
 
 ![rsquarelabs-core hero ](docs/images/rsquarelabs-hero.jpg)
 
