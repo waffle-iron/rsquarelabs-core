@@ -57,7 +57,7 @@ Community
 
 
 ## RoadMap
-You can find a detailed Roadmap of rl-core on the Wiki.
+You can find a detailed Roadmap of rsquarelabs-core [here](/milestones).
 
 ## Support
 We support universties and research labs to install, configure and setup rl-core
