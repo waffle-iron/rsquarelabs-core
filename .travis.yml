@@ -5,7 +5,7 @@ python:
 
 
 before_install:
-  - sudo apt-get install gromacs 
+  - sudo apt-get install gromacs
   - pip install codecov
 
 script:
