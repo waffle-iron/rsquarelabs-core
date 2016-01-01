@@ -13,7 +13,7 @@ before_install:
   - mkdir build
   - cd build/
   - cmake .. -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON
-  - make -j
+  - make
   - sudo make install
   - cd /root
   - echo source /usr/local/gromacs/bin/GMXRC >> .profile
