@@ -53,11 +53,20 @@ gromacs.create_water_box()
 
 
 ## Community
-Community
+Want to join an open source project? Now it's your chance!
+
+Don't know what you want to help out with? Well here are some areas that we could use help with:
+
+rsquarelabs-core features - scientific thoughts, architecture
+rsquarelabs-core code - see [milestones](https://github.com/rsquarelabs/rsquarelabs-core/milestones) and [issues](https://github.com/rsquarelabs/rsquarelabs-core/issues) for more
+rsquarelabs-core [documentation](http://docs.rsquarelabs.org), tutorials and examples
+rsquarelabs-core [website](http://rsquarelabs.org)
+If you want to join our community as a contributor, please leave a message as [@rrmerugu](https://twitter.com/rrmerugu) 
+
 
 
 ## RoadMap
-You can find a detailed Roadmap of rsquarelabs-core [here](milestones).
+You can find a detailed Roadmap of rsquarelabs-core [here](https://github.com/rsquarelabs/rsquarelabs-core/milestones).
 
 ## Support
 We support universties and research labs to install, configure and setup rl-core
