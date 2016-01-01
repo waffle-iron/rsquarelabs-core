@@ -5,19 +5,20 @@ python:
 
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y wget build-essential cmake file libxml2-dev libboost-dev
-  - wget ftp://ftp.gromacs.org/pub/gromacs/gromacs-4.6.5.tar.gz
-  - tar -xf gromacs-4.6.5.tar.gz
-  - cd gromacs-4.6.5
-  - mkdir build
-  - cd build/
-  - cmake .. -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON
-  - make
-  - sudo make install
-  - sudo cd /root
-  - sudo echo source /usr/local/gromacs/bin/GMXRC >> .profile
-  - pip install codecov
+  - pwd
+  # - sudo apt-get update
+  # - sudo apt-get install -y wget build-essential cmake file libxml2-dev libboost-dev
+  # - wget ftp://ftp.gromacs.org/pub/gromacs/gromacs-4.6.5.tar.gz
+  # - tar -xf gromacs-4.6.5.tar.gz
+  # - cd gromacs-4.6.5
+  # - mkdir build
+  # - cd build/
+  # - cmake .. -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON
+  # - make
+  # - sudo make install
+  # - sudo cd /root
+  # - sudo echo source /usr/local/gromacs/bin/GMXRC >> .profile
+  # - pip install codecov
 
 script:
   - mdrun -v
