@@ -5,7 +5,7 @@ python:
 
 
 before_install:
-  - sudo apt-get update && apt-get install -y wget build-essential cmake file libxml2-dev libboost-dev
+  - sudo apt-get update && sudo apt-get install -y wget build-essential cmake file libxml2-dev libboost-dev
   - wget ftp://ftp.gromacs.org/pub/gromacs/gromacs-5.0.4.tar.gz
   - echo "c177ae5fd6d71e2bec7369bc66cd082e gromacs-5.0.4.tar.gz" > MD5SUM
   - md5sum -c MD5SUM
