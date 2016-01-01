@@ -15,8 +15,8 @@ before_install:
   - cmake .. -DGMX_BUILD_OWN_FFTW=ON -DREGRESSIONTEST_DOWNLOAD=ON
   - make
   - sudo make install
-  - cd /root
-  - echo source /usr/local/gromacs/bin/GMXRC >> .profile
+  - sudo cd /root
+  - sudo echo source /usr/local/gromacs/bin/GMXRC >> .profile
   - pip install codecov
 
 script:
