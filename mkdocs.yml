@@ -2,6 +2,7 @@ site_name: RSQUARELABS CORE
 site_url: http://docs.rsquarelabs.org
 canonical_url: http://docs.rsquarelabs.org
 docs_dir: docs
+use_directory_urls: false
 pages:
 - Home: index.md
 - Tutorials:
