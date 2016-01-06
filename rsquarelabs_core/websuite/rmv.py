@@ -32,25 +32,19 @@ RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
 
 app = Bottle()
 #
+now = datetime.now().strftime("%Y %b, %d %H:%M:%S %p")
 bottle2.TEMPLATE_PATH.insert(0,HTML_DIR)
 
 
 @app.route('/websuite/rmv.html')
 def rmv():
-    # print request.url_args
-    print request.url
-    print request.query_string
-    # print request.urlparts
-    # print request.get('file')
-    # print request.params
-    # print request.query
     qs_string = request.query_string
     file_name = None
     if 'file=' in qs_string:
         file_name = qs_string.split('file=')[1].split('&')[0]
         print file_name
     content = open(os.path.join(HTML_DIR, 'rmv.html')).read()
-    return template(content, file_name=file_name)
+    return template(content, file_name=file_name,now=now)
 
 
 
@@ -75,7 +69,7 @@ def index():
     print HTML_DIR
     print BASE_DIR
     content = open(os.path.join(HTML_DIR, 'websuite_index.html')).read()
-    return template(content)
+    return template(content, now=now)
 
 @app.route('/docs/rmv')
 def goto_rmv():
@@ -84,7 +78,7 @@ def goto_rmv():
 @app.route('/docs/rmv.html')
 def docs():
     content =  open(os.path.join(DOCS_DIR, 'rmv.html')).read()
-    return template(content)
+    return template(content,now=now)
 
 
 @app.route('/websuite/projects.html')
@@ -92,7 +86,7 @@ def projects_list():
     projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
     projects_data = json.loads(projects_list)
     content =  open(os.path.join(HTML_DIR, 'projects.html')).read()
-    return template(content, projects_list=projects_data)
+    return template(content, projects_list=projects_data,now=now)
 
 
 @app.route('/websuite/project/:project_id')
@@ -132,7 +126,7 @@ def projects_list(project_id):
             project_user_email = project['project_user_email']
             print project_log
     content =  open(os.path.join(HTML_DIR, 'project-status.html')).read()
-    return template(content, project_log=project_log, project_config=project_config, project_user_email = project_user_email, project_log_updated_time=project_log_updated_time, project_path=project_path)
+    return template(content, project_log=project_log, project_config=project_config, project_user_email = project_user_email, project_log_updated_time=project_log_updated_time, project_path=project_path,now=now)
 
 
 
@@ -146,7 +140,7 @@ def filebrowser():
     folder_path = os.path.dirname(__file__)
     folder_name = os.path.split(folder_path)[1]
     files = [f for f in os.listdir('.') if os.path.isfile(f)]
-    return template(content, files_data = files, folder_name = folder_name, folder_path= folder_path )
+    return template(content, files_data = files, folder_name = folder_name, folder_path= folder_path,now=now )
 
 
 @app.error(404)
@@ -164,7 +158,7 @@ def server_run():
     """
     Named _run to make this component more reusable
     """
-    app.run(host='localhost', port=9090, debug=False) #, quiet=True
+    app.run(host='localhost', port=9090, debug=False, reloader=True, liveport=9999) #, quiet=True
 
 
 def server_start_cmd():
