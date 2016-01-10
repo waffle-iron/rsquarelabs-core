@@ -55,8 +55,8 @@ def main():
 
 
         if os.path.exists(project_data['project_config']) :
-            print "ERROR: A Project already exist in this folder"
-            print "============================================="
+            mesg = "ERROR: A Project already exist in this folder\n============================================="
+            cprint(mesg, 'red')
             exit()
         else:
             fh = open(project_data['project_config'] , 'w', 0755)
