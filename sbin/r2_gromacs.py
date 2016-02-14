@@ -43,37 +43,37 @@ def main():
         current_folder =  os.getcwd()
 
         project_data = {}
-        project_data["project_name"] = ""
-        project_data["project_tags"] = ""
-        project_data["project_user_email"] = ""
-        project_data["project_key"] = ""
-        project_data["project_path"] = os.getcwd()
-        project_data["project_type"] = TOOL_NAME
+        project_data["title"] = ""
+        project_data["tags"] = ""
+        project_data["user_email"] = ""
+        project_data["slug"] = ""
+        project_data["path"] = os.getcwd()
+        project_data["type"] = TOOL_NAME
 
-        project_data['project_config'] = os.path.join(project_data["project_path"], 'r2_gromacs.json')
-        project_data['project_log'] = os.path.join(project_data["project_path"], 'r2_gromacs.log')
+        project_data['config'] = os.path.join(project_data["path"], 'r2_gromacs.json')
+        project_data['log'] = os.path.join(project_data["path"], 'r2_gromacs.log')
 
 
-        if os.path.exists(project_data['project_config']) :
+        if os.path.exists(project_data['config']) :
             mesg = "ERROR: A Project already exist in this folder\n============================================="
             cprint(mesg, 'red')
             exit()
         else:
-            fh = open(project_data['project_config'] , 'w', 0755)
-            fh_log = open(project_data['project_log'],'w', 0755)
+            fh = open(project_data['config'] , 'w', 0755)
+            fh_log = open(project_data['log'],'w', 0755)
 
 
 
-        while( project_data["project_name"].lstrip() == ""):
-            project_data["project_name"] = raw_input("What would be your project Name: (TAK1 Modelling): ")
+        while( project_data["title"].lstrip() == ""):
+            project_data["title"] = raw_input("What would be your project Name: (TAK1 Modelling): ")
 
-        while(project_data["project_tags"].lstrip() == ""):
-            project_data["project_tags"] = raw_input("Please tag your project (eg: Molecular Dynamics, Minimisation, TAK1, GPCR5): ")
+        while(project_data["tags"].lstrip() == ""):
+            project_data["tags"] = raw_input("Please tag your project (eg: Molecular Dynamics, Minimisation, TAK1, GPCR5): ")
 
-        while(project_data["project_user_email"].lstrip() == ""):
-            project_data["project_user_email"] = raw_input("Your email for notification (eg: me@university.edu ): ")
+        while(project_data["user_email"].lstrip() == ""):
+            project_data["user_email"] = raw_input("Your email for notification (eg: me@university.edu ): ")
 
-        generated_project_id = project_data["project_name"].replace(" ","-").replace("_","-")\
+        generated_project_id = project_data["title"].replace(" ","-").replace("_","-")\
             .replace("/","-").replace("\\","-").replace(".","-").replace(",","-").replace(";",'-').replace(":","-").replace("--","-")
 
 
@@ -81,12 +81,12 @@ def main():
         customize_name = raw_input("Creating this project id as [%s], Do you wish to change ? (y/n , default=n): "%generated_project_id)
 
         if customize_name.lower() == 'n' or customize_name == '':
-            project_data["project_key"] = generated_project_id
+            project_data["slug"] = generated_project_id
         else:
-            while(project_data["project_key"].lstrip() == ""):
-                project_data["project_key"]  = raw_input("Enter the project_key : (tak1-modelling-trail1)")
+            while(project_data["slug"].lstrip() == ""):
+                project_data["slug"]  = raw_input("Enter the project_key : (tak1-modelling-trail1)")
 
-        project_data["project_started"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        project_data["date"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 
 
@@ -150,7 +150,7 @@ Project created with id, %s
             project_create_details = json.loads(req.text)
             mesg =  "ERROR \n%s " %project_create_details
             cprint(mesg, 'red')
-            os.remove(project_data['project_config'])
+            os.remove(project_data['config'])
 
 
 
