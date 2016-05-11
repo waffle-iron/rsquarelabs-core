@@ -94,8 +94,8 @@ def projects_list(project_id):
 
     qs_string = request.query_string
     project_path = None
-    if 'project_path=' in qs_string:
-        project_path = qs_string.split('project_path=')[1].split('&')[0]
+    if 'path=' in qs_string:
+        project_path = qs_string.split('path=')[1].split('&')[0]
 
     print project_id
     print project_path
@@ -109,21 +109,21 @@ def projects_list(project_id):
     project_config = None
 
     for project in projects_data['projects']:
-        if project['project_path'] == project_path and project['project_id'] == project_id:
+        if project['path'] == project_path and project['project_id'] == project_id:
             # found this :D
             pass
             print "Found this :D"
             try:
-                project_log = open(os.path.join(project['project_path'], "%s.log"%project['project_type'] )).read()
-                project_config = open(os.path.join(project['project_path'], "%s.json"%project['project_type'] )).read()
-                project_log_updated_time = os.path.getmtime(os.path.join(project['project_path'], "%s.log"%project['project_type'] ))
+                project_log = open(os.path.join(project['path'], "%s.log"%project['project_type'] )).read()
+                project_config = open(os.path.join(project['path'], "%s.json"%project['project_type'] )).read()
+                project_log_updated_time = os.path.getmtime(os.path.join(project['path'], "%s.log"%project['project_type'] ))
                 project_log_updated_time = datetime.fromtimestamp(project_log_updated_time).strftime('%Y-%m-%d %H:%M:%S')
 
             except Exception as e:
                 print e
 
 
-            project_user_email = project['project_user_email']
+            project_user_email = project['user_email']
             print project_log
     content =  open(os.path.join(HTML_DIR, 'project-status.html')).read()
     return template(content, project_log=project_log, project_config=project_config, project_user_email = project_user_email, project_log_updated_time=project_log_updated_time, project_path=project_path,now=now)
