@@ -19,3 +19,7 @@ pip-selfcheck.json
 sbin/r2_gromacs.json
 r2_gromacs.json
 r2_gromacs.log
+sbin/r2_gromacs.json
+sbin/r2_gromacs.log
+*.db
+
