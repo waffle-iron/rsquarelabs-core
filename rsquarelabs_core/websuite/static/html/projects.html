@@ -15,35 +15,38 @@
         <div class="col-md-12">
             <h1>Projects  </h1>
 
-
                 <table class="table table-striped table-bordered table-hover">
                     <thead>
                       <tr>
-                        <th>SNo</th>
                         <th>Project ID</th>
-                        <th>Project Email</th>
+                        <th>Project Key</th>
                         <th>Project Name</th>
                         <th>Project Tags</th>
+                        <th>Project Email</th>
                         <th>Project Type</th>
-                        <th>Project Path</th>
+                        <!--<th>Project Path</th>-->
+                        <!--<th>Project Log</th>-->
                         <th>Project Start Date</th>
                       </tr>
                     </thead>
                     <tbody>
-                    % for  i ,project in enumerate(projects_list['projects']):
+
+                    % for project in projects_list :
                       <tr>
-                        <th>{{i+1}}</th>
-                        <td><a href="/websuite/project/{{project['project_id']}}?project_path={{project['path']}}">{{project['project_id']}}</a></td>
-                        <td>{{project['user_email']}}</td>
-                        <td>{{project['title']}}</td>
-                        <td>{{project['tags']}}</td>
-                        <td>{{project['type']}}</td>
-                        <td>{{project['path']}}</td>
-                        <td>{{project['date']}}</td>
+                        <th><a href="/websuite/project/{{project[0]}}"> {{project[0]}}</a></th>
+                        <th>{{project[1]}}</th>
+                        <th>{{project[2]}}</th>
+                        <th>{{project[3]}}</th>
+                        <th>{{project[4]}}</th>
+                        <th>{{project[5]}}</th>
+                        <th>{{project[8]}}</th>
+                        <!--<th>{{project[7]}}</th>-->
+                        <!--<th>{{project[8]}}</th>-->
                       </tr>
                     %end
                     </tbody>
                 </table>
+
 
 
 

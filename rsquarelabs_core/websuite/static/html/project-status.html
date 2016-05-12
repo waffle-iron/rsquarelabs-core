@@ -19,10 +19,10 @@
         <p>Unable to read the project config file.</p>
     <hr>
     <h2 class="text-center">No such Project Exists to my knowledge</h2>
-    <p class="text-center">Either the <strong>{{project_path}}</strong> is deleted or permissions are restricted</p>
+    <p class="text-center">Either the <strong></strong> is deleted or permissions are restricted</p>
     %end
-
-    %if project_config != None:
+{{project_data[1]}}
+    %if project_data == None:
         <div class="row">
 
             <div class="col-md-6"><h1>Project Status  </h1></div>
@@ -45,15 +45,6 @@
         <div class="row">
             <div class="col-md-12">
 
-
-
-                <h4>Project Config</h4>
-                <pre>{{project_config}}</pre>
-
-                <hr>
-                <h4>Project Log</h4>
-                <small>Last updated at : {{project_log_updated_time}}</small>
-                <pre>{{project_log}}</pre>
 
             </div>
         </div>

@@ -31,8 +31,14 @@ from rsquarelabs_core.db_engine import DBEngine
 # print STATIC_DIR
 # print DOCS_DIR
 
+USER_HOME_FOLDER = os.getenv('HOME')
+RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
+RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json') # not very much needed
+RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
+RSQ_DB_PATH = os.path.join(RSQ_HOME, 'tables.db')
 
 
+proj1 = DBEngine(RSQ_DB_PATH)
 
 
 # print index_html
@@ -92,50 +98,16 @@ def docs():
 def projects_list():
     # projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
     # projects_data = json.loads(projects_list)
-
-
+    projects_data = proj1.do_select("SELECT id, slug, title, tags, user_email, type, path, log, date from projects")
     content =  open(os.path.join(HTML_DIR, 'projects.html')).read()
     return template(content, projects_list=projects_data,now=now)
 
 
 @app.route('/websuite/project/:project_id')
 def projects_list(project_id):
-
-    qs_string = request.query_string
-    project_path = None
-    if 'path=' in qs_string:
-        project_path = qs_string.split('path=')[1].split('&')[0]
-
-    print project_id
-    print project_path
-
-
-    projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
-    projects_data = json.loads(projects_list)
-    project_log_updated_time = None
-    project_log = None
-    project_user_email = None
-    project_config = None
-
-    for project in projects_data['projects']:
-        if project['path'] == project_path and project['project_id'] == project_id:
-            # found this :D
-            pass
-            print "Found this :D"
-            try:
-                project_log = open(os.path.join(project['path'], "%s.log"%project['project_type'] )).read()
-                project_config = open(os.path.join(project['path'], "%s.json"%project['project_type'] )).read()
-                project_log_updated_time = os.path.getmtime(os.path.join(project['path'], "%s.log"%project['project_type'] ))
-                project_log_updated_time = datetime.fromtimestamp(project_log_updated_time).strftime('%Y-%m-%d %H:%M:%S')
-
-            except Exception as e:
-                print e
-
-
-            project_user_email = project['user_email']
-            print project_log
+    project_data = proj1.do_select("SELECT id, title from projects where id = %s"%(int(project_id))).fetchone()
     content =  open(os.path.join(HTML_DIR, 'project-status.html')).read()
-    return template(content, project_log=project_log, project_config=project_config, project_user_email = project_user_email, project_log_updated_time=project_log_updated_time, project_path=project_path,now=now)
+    return template(content, project_log=None, project_config=None, project_data=project_data, now=now)
 
 
 
