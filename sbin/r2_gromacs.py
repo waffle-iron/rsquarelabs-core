@@ -1,13 +1,17 @@
 __author__ = 'rrmerugu'
 
-
 # from optparse import OptionParser
-
 from termcolor import colored, cprint
 import sys, os, json, requests
 from datetime import datetime
 # get argument list using sys module
+
+# TODO - Need improvements
 sys.argv
+BIN_DIR = os.path.dirname(os.path.abspath(__file__))
+CORE_DIR = os.path.join(BIN_DIR, '../')
+sys.path.append(CORE_DIR)
+from rsquarelabs_core.db_engine import DBEngine
 
 
 CLIENT_KEY = "6TCYXyf4lwTh601S1NpgbhlkyYgD5OQLbUvUq9Rf"
@@ -21,7 +25,7 @@ USER_HOME_FOLDER = os.getenv('HOME')
 RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
 RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
 RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
+RSQ_DB_PATH = os.path.join(RSQ_HOME, 'tables.db')
 
 TOOL_NAME = "r2_gromacs"
 
@@ -97,36 +101,49 @@ def main():
             os.mkdir(RSQ_HOME, 0755)
 
         # now save this config info to ~/.rsquarelabs/projects.json
-        if os.path.exists(RSQ_HOME_PROJECTS_LIST):
-            old_data = open(RSQ_HOME_PROJECTS_LIST).read()
-            projects_list_fh = open(RSQ_HOME_PROJECTS_LIST) ## dont open in write mode
-        else:
-            projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
-            old_data = ""
+        # if os.path.exists(RSQ_HOME_PROJECTS_LIST):
+        #     old_data = open(RSQ_HOME_PROJECTS_LIST).read()
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST) ## dont open in write mode
+        # else:
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
+        #     old_data = ""
+        #
+        proj1 = DBEngine('tables.db')
 
-
-
+        cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, path, config, log, type, date)\
+                        VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"
+                        % (project_data["title"],
+                           project_data["tags"],
+                           project_data["user_email"],
+                           project_data["slug"],
+                           project_data["path"],
+                           project_data["config"],
+                           project_data["log"],
+                           project_data["type"],
+                           project_data["date"],
+                           ))
+        print cur
 
 
         # print old_data
         # print len(old_data)
-        if len(old_data) != 0:
-            projects_list_fh = open(RSQ_HOME_PROJECTS_LIST, "w", 755)
-            # convert string to dict
-            data_from_file = json.loads(old_data)
-            old_projects_data = data_from_file['projects']
-            old_projects_data.append(project_data)
-
-            thedata = {}
-            thedata['projects'] = old_projects_data
-            thedata['last_update'] =  current_date()
-
-        else:
-            projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
-            thedata = {}
-            thedata['projects'] = []
-            thedata['last_update'] =  current_date()
-            thedata['projects'].append(project_data)
+        # if len(old_data) != 0:
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST, "w", 755)
+        #     # convert string to dict
+        #     data_from_file = json.loads(old_data)
+        #     old_projects_data = data_from_file['projects']
+        #     old_projects_data.append(project_data)
+        #
+        #     thedata = {}
+        #     thedata['projects'] = old_projects_data
+        #     thedata['last_update'] =  current_date()
+        #
+        # else:
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
+        #     thedata = {}
+        #     thedata['projects'] = []
+        #     thedata['last_update'] =  current_date()
+        #     thedata['projects'].append(project_data)
             # projects_list_fh.write(json.dumps(thedata))
 
 
@@ -139,19 +156,17 @@ def main():
 
         if True: # if created into db
             from random import randint
-
             project_create_details = project_data # json.loads(project_data)
             project_create_details['project_id'] = randint(1,1000)
-            projects_list_fh.write(json.dumps(thedata))
             fh_log.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
 
             mesg = """============================================
-Project created with id, %s
-============================================"""  %project_create_details['project_id']
+Project created with id '%s',
+============================================""" % cur.lastrowid
             cprint(mesg, "green")
         else:
-            project_create_details = json.loads(project_data)
-            mesg =  "ERROR \n%s " %project_create_details
+
+            mesg =  "ERROR \n%s " %project_data['title']
             cprint(mesg, 'red')
             os.remove(project_data['config'])
 
