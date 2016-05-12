@@ -23,7 +23,7 @@ __VERSION__ = "0.1dev"
 
 USER_HOME_FOLDER = os.getenv('HOME')
 RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
-RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json') # not very much needed
+RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
 RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
 RSQ_DB_PATH = os.path.join(RSQ_HOME, 'tables.db')
 
@@ -109,7 +109,20 @@ def main():
 
 
 
-        proj1 = DBEngine(RSQ_DB_PATH)
+        if os.path.exists(RSQ_HOME):
+            pass
+        else:
+            os.mkdir(RSQ_HOME, 0755)
+
+        # now save this config info to ~/.rsquarelabs/projects.json
+        # if os.path.exists(RSQ_HOME_PROJECTS_LIST):
+        #     old_data = open(RSQ_HOME_PROJECTS_LIST).read()
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST) ## dont open in write mode
+        # else:
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
+        #     old_data = ""
+        #
+        proj1 = DBEngine('tables.db')
 
         cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, path, config, log, type, date)\
                         VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"
@@ -123,11 +136,42 @@ def main():
                            project_data["type"],
                            project_data["date"],
                            ))
+        print cur
 
 
+        # print old_data
+        # print len(old_data)
+        # if len(old_data) != 0:
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST, "w", 755)
+        #     # convert string to dict
+        #     data_from_file = json.loads(old_data)
+        #     old_projects_data = data_from_file['projects']
+        #     old_projects_data.append(project_data)
+        #
+        #     thedata = {}
+        #     thedata['projects'] = old_projects_data
+        #     thedata['last_update'] =  current_date()
+        #
+        # else:
+        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
+        #     thedata = {}
+        #     thedata['projects'] = []
+        #     thedata['last_update'] =  current_date()
+        #     thedata['projects'].append(project_data)
+            # projects_list_fh.write(json.dumps(thedata))
 
 
-        if cur.rowcount: # if created into db
+        # print project_data
+
+        ## sending this info to rsquarelabs-apis
+        # headers = {'content-type': 'application/json'}
+        # req = requests.post("http://localhost:8000/restful/project/",  headers=headers, data= json.dumps(project_data))
+
+
+        if True: # if created into db
+            from random import randint
+            project_create_details = project_data # json.loads(project_data)
+            project_create_details['project_id'] = randint(1,1000)
             fh_log.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
 
             mesg = """============================================
@@ -135,6 +179,7 @@ Project created with id '%s',
 ============================================""" % cur.lastrowid
             cprint(mesg, "green")
         else:
+
             mesg =  "ERROR \n%s " %project_data['title']
             cprint(mesg, 'red')
             os.remove(project_data['config'])
