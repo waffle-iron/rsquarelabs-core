@@ -133,12 +133,15 @@ def main():
         # print project_data
 
         ## sending this info to rsquarelabs-apis
-        headers = {'content-type': 'application/json'}
-        req = requests.post("http://localhost:8000/restful/project/",  headers=headers, data= json.dumps(project_data))
+        # headers = {'content-type': 'application/json'}
+        # req = requests.post("http://localhost:8000/restful/project/",  headers=headers, data= json.dumps(project_data))
 
 
-        if req.status_code == 201:
-            project_create_details = json.loads(req.text)
+        if True: # if created into db
+            from random import randint
+
+            project_create_details = project_data # json.loads(project_data)
+            project_create_details['project_id'] = randint(1,1000)
             projects_list_fh.write(json.dumps(thedata))
             fh_log.write("# RSQUARELABS-CORE v%s \n# Written by Ravi RT Merugu \n# https://github.com/rsquarelabs/rsquarelabs-core\n\n\n"%__VERSION__)
 
@@ -147,7 +150,7 @@ Project created with id, %s
 ============================================"""  %project_create_details['project_id']
             cprint(mesg, "green")
         else:
-            project_create_details = json.loads(req.text)
+            project_create_details = json.loads(project_data)
             mesg =  "ERROR \n%s " %project_create_details
             cprint(mesg, 'red')
             os.remove(project_data['config'])

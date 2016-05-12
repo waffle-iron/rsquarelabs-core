@@ -33,13 +33,13 @@
                     % for  i ,project in enumerate(projects_list['projects']):
                       <tr>
                         <th>{{i+1}}</th>
-                        <td><a href="/websuite/project/{{project['project_id']}}?project_path={{project['project_path']}}">{{project['project_id']}}</a></td>
-                        <td>{{project['project_user_email']}}</td>
-                        <td>{{project['project_name']}}</td>
-                        <td>{{project['project_tags']}}</td>
-                        <td>{{project['project_type']}}</td>
-                        <td>{{project['project_path']}}</td>
-                        <td>{{project['project_started']}}</td>
+                        <td><a href="/websuite/project/{{project['project_id']}}?project_path={{project['path']}}">{{project['project_id']}}</a></td>
+                        <td>{{project['user_email']}}</td>
+                        <td>{{project['title']}}</td>
+                        <td>{{project['tags']}}</td>
+                        <td>{{project['type']}}</td>
+                        <td>{{project['path']}}</td>
+                        <td>{{project['date']}}</td>
                       </tr>
                     %end
                     </tbody>
