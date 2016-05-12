@@ -1,7 +1,7 @@
 __author__ = 'rrmerugu'
 
 from bottle import Bottle, request, static_file, template, redirect
-import os
+import os, sys
 import bottle as bottle2
 from rsquarelabs_core.utils import start_the_process
 import json
@@ -16,9 +16,16 @@ CSS_DIR     = os.path.join(STATIC_DIR, 'css')
 JS_DIR      = os.path.join(STATIC_DIR, 'js')
 
 
-USER_HOME_FOLDER = os.getenv('HOME')
-RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
+# USER_HOME_FOLDER = os.getenv('HOME')
+# RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
+# RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
+
+
+BIN_DIR = os.path.dirname(os.path.abspath(__file__))
+CORE_DIR = os.path.join(BIN_DIR, '../')
+sys.path.append(CORE_DIR)
+from rsquarelabs_core.db_engine import DBEngine
+
 
 # print BASE_DIR
 # print STATIC_DIR
@@ -83,8 +90,10 @@ def docs():
 
 @app.route('/websuite/projects.html')
 def projects_list():
-    projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
-    projects_data = json.loads(projects_list)
+    # projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
+    # projects_data = json.loads(projects_list)
+
+
     content =  open(os.path.join(HTML_DIR, 'projects.html')).read()
     return template(content, projects_list=projects_data,now=now)
 

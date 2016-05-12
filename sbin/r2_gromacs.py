@@ -122,7 +122,7 @@ def main():
                            project_data["type"],
                            project_data["date"],
                            ))
-        print cur
+
 
 
         # print old_data
