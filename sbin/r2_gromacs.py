@@ -55,7 +55,7 @@ def main():
         print "Lets start the project"
 
         # check and create folder rsquarelabsProjects in $HOME
-        
+
 
 
         current_folder =  os.getcwd()
@@ -64,21 +64,15 @@ def main():
         project_data["title"] = ""
         project_data["tags"] = ""
         project_data["user_email"] = ""
+        project_data["short_note"] = ""
         project_data["slug"] = ""
         project_data["path"] = os.getcwd()
         project_data["type"] = TOOL_NAME
 
-        project_data['config'] = os.path.join(project_data["path"], 'r2_gromacs.json')
-        project_data['log'] = os.path.join(project_data["path"], 'r2_gromacs.log')
+        # project_data['config'] = os.path.join(project_data["path"], 'r2_gromacs.json')
+        # project_data['log'] = os.path.join(project_data["path"], 'r2_gromacs.log')
 
 
-        if os.path.exists(project_data['config']) :
-            mesg = "ERROR: A Project already exist in this folder\n============================================="
-            cprint(mesg, 'red')
-            exit()
-        else:
-            fh = open(project_data['config'] , 'w', 0755)
-            fh_log = open(project_data['log'],'w', 0755)
 
 
 
@@ -90,6 +84,9 @@ def main():
 
         while(project_data["user_email"].lstrip() == ""):
             project_data["user_email"] = raw_input("Your email for notification (eg: me@university.edu ): ")
+
+        while (project_data["short_note"].lstrip() == ""):
+            project_data["short_note"] = raw_input("Write a short note : ")
 
         generated_project_id = project_data["title"].replace(" ","-").replace("_","-")\
             .replace("/","-").replace("\\","-").replace(".","-").replace(",","-").replace(";",'-').replace(":","-").replace("--","-")
@@ -103,72 +100,49 @@ def main():
         else:
             while(project_data["slug"].lstrip() == ""):
                 project_data["slug"]  = raw_input("Enter the project_key : (tak1-modelling-trail1)")
-
         project_data["date"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 
+        # join rsq proj home + slug
+        RSQ_PROJECT_NAME = os.path.join(RSQ_PROJECTS_HOME, project_data["slug"])
 
 
-        if os.path.exists(RSQ_HOME):
-            pass
+
+        if os.path.exists(RSQ_PROJECT_NAME):
+            while(os.path.exists(RSQ_PROJECT_NAME)):
+                project_data["slug"] = raw_input("Project with project key exists, Enter new key for the project : ")
+            project_data["slug"] = project_data["slug"].replace(" ","-").replace("_","-")\
+            .replace("/","-").replace("\\","-").replace(".","-").replace(",","-").replace(";",'-').replace(":","-").replace("--","-")
+            RSQ_PROJECT_NAME = os.path.join(RSQ_PROJECTS_HOME, project_data["slug"])
+            os.mkdir(RSQ_PROJECT_NAME, 0755)
         else:
-            os.mkdir(RSQ_HOME, 0755)
+            os.mkdir(RSQ_PROJECT_NAME, 0755)
+        project_data["log"] = os.path.join(RSQ_PROJECT_NAME, 'r2_gromacs.log')
+        project_data["config"] = os.path.join(RSQ_PROJECT_NAME, 'r2_gromacs.config')
+        fh_log = open(project_data["log"], 'w', 0755)
+        fh = open(project_data["config"], 'w', 0755)
 
-        # now save this config info to ~/.rsquarelabs/projects.json
-        # if os.path.exists(RSQ_HOME_PROJECTS_LIST):
-        #     old_data = open(RSQ_HOME_PROJECTS_LIST).read()
-        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST) ## dont open in write mode
-        # else:
-        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
-        #     old_data = ""
-        #
-        proj1 = DBEngine('tables.db')
+        proj1 = DBEngine(RSQ_DB_PATH)
 
-        cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, path, config, log, type, date)\
-                        VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')"
+        cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
+                        VALUES('%s', '%s', '%s', '%s', '%s','%s', '%s', '%s', '%s', '%s')"
                         % (project_data["title"],
                            project_data["tags"],
                            project_data["user_email"],
                            project_data["slug"],
+                           project_data["short_note"],
                            project_data["path"],
                            project_data["config"],
                            project_data["log"],
                            project_data["type"],
                            project_data["date"],
                            ))
-        print cur
 
 
-        # print old_data
-        # print len(old_data)
-        # if len(old_data) != 0:
-        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST, "w", 755)
-        #     # convert string to dict
-        #     data_from_file = json.loads(old_data)
-        #     old_projects_data = data_from_file['projects']
-        #     old_projects_data.append(project_data)
-        #
-        #     thedata = {}
-        #     thedata['projects'] = old_projects_data
-        #     thedata['last_update'] =  current_date()
-        #
-        # else:
-        #     projects_list_fh = open(RSQ_HOME_PROJECTS_LIST,"w",755)
-        #     thedata = {}
-        #     thedata['projects'] = []
-        #     thedata['last_update'] =  current_date()
-        #     thedata['projects'].append(project_data)
-            # projects_list_fh.write(json.dumps(thedata))
 
 
-        # print project_data
 
-        ## sending this info to rsquarelabs-apis
-        # headers = {'content-type': 'application/json'}
-        # req = requests.post("http://localhost:8000/restful/project/",  headers=headers, data= json.dumps(project_data))
-
-
-        if True: # if created into db
+        if cur.rowcount: # if created into db
             from random import randint
             project_create_details = project_data # json.loads(project_data)
             project_create_details['project_id'] = randint(1,1000)
@@ -179,10 +153,12 @@ Project created with id '%s',
 ============================================""" % cur.lastrowid
             cprint(mesg, "green")
         else:
-
+            os.remove(project_data["log"])
+            os.remove(project_data["config"])
+            os.rmdir(RSQ_PROJECT_NAME)
             mesg =  "ERROR \n%s " %project_data['title']
             cprint(mesg, 'red')
-            os.remove(project_data['config'])
+
 
 
 

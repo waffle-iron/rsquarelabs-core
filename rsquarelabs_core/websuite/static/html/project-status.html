@@ -12,24 +12,23 @@
 % include('header.html')
 <div class="container">
 
-    %if project_log == None:
-        <p>Unable to read project log file.</p>
-    %end
-    % if project_config == None:
-        <p>Unable to read the project config file.</p>
-    <hr>
-    <h2 class="text-center">No such Project Exists to my knowledge</h2>
-    <p class="text-center">Either the <strong></strong> is deleted or permissions are restricted</p>
-    %end
-{{project_data[1]}}
-    %if project_data == None:
+        <!--<hr>-->
+    <!--<h2 class="text-center">No such Project Exists to my knowledge</h2>-->
+    <!--<p class="text-center">Either the <strong></strong> is deleted or permissions are restricted</p>-->
+
+
+
+    %if project_data:
         <div class="row">
 
-            <div class="col-md-6"><h1>Project Status  </h1></div>
+            <div class="col-md-6">
+                <h1>{{project_data[2]}} <small>{{project_data[1]}}</small></h1>
+                <p>{{project_data[3]}}</p>
+            </div>
             <div class="col-md-4 col-md-offset-2">
 
                    <div class="input-group">
-                  <input type="text" value="{{project_user_email}}" class="form-control" placeholder="Search for...">
+                  <input type="text" value="" class="form-control" placeholder="Search for...">
                   <span class="input-group-btn">
                     <button class="btn btn-secondary" type="button">Notify Me!</button>
                   </span>
@@ -38,16 +37,20 @@
 
             </div>
 
-            </div>
-
-
-        <hr>
-        <div class="row">
-            <div class="col-md-12">
-
-
-            </div>
         </div>
+
+        %if project_log == None:
+            <p>Unable to read project log file.</p>
+        %else:
+            <pre>{{project_log}}</pre>
+        %end
+
+
+        % if project_config == None:
+            <p>Unable to read the project config file.</p>
+        %else:
+            <pre>{{project_config}}</pre>
+        %end
 
     %end
 </div>

@@ -16,7 +16,7 @@ class DBEngine:
             # TODO - Need improvements
             self.conn.execute(tables_structure)
         except Exception as e:
-            print e
+            #print e
             pass
 
         self.cur = self.conn.cursor()

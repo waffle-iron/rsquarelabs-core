@@ -3,9 +3,10 @@ CREATE TABLE projects
        title          TEXT    NOT NULL,
        tags           TEXT    NOT NULL,
        user_email     TEXT    NOT NULL,
-       slug           TEXT,
+       short_note     TEXT    NOT NULL,
+       slug           TEXT    NOT NULL,
        path           TEXT,
-       config      TEXT,
+       config         TEXT,
        log            TEXT,
        type           TEXT,
        date           TEXT);
