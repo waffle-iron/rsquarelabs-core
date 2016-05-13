@@ -39,6 +39,12 @@
 
         </div>
 
+    <ol>
+        % for file in file_list:
+            <li>{{file}}</li>
+        % end
+    </ol>
+
         %if project_log == None:
             <p>Unable to read project log file.</p>
         %else:

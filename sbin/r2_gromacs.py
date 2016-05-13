@@ -11,7 +11,7 @@ sys.argv
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
 sys.path.append(CORE_DIR)
-from rsquarelabs_core.db_engine import DBEngine
+
 
 
 CLIENT_KEY = "6TCYXyf4lwTh601S1NpgbhlkyYgD5OQLbUvUq9Rf"
@@ -25,7 +25,7 @@ USER_HOME_FOLDER = os.getenv('HOME')
 RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
 RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
 RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-RSQ_DB_PATH = os.path.join(RSQ_HOME, 'tables.db')
+RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
 
 
 if not os.path.exists(RSQ_PROJECTS_HOME):
@@ -39,7 +39,7 @@ if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
 
 
 
-
+from rsquarelabs_core.db_engine import DBEngine
 
 TOOL_NAME = "r2_gromacs"
 
@@ -66,7 +66,7 @@ def main():
         project_data["user_email"] = ""
         project_data["short_note"] = ""
         project_data["slug"] = ""
-        project_data["path"] = os.getcwd()
+        project_data["path"] = ""
         project_data["type"] = TOOL_NAME
 
         # project_data['config'] = os.path.join(project_data["path"], 'r2_gromacs.json')
@@ -104,24 +104,29 @@ def main():
 
 
         # join rsq proj home + slug
-        RSQ_PROJECT_NAME = os.path.join(RSQ_PROJECTS_HOME, project_data["slug"])
+        PROJECT_PATH = os.path.join(RSQ_PROJECTS_HOME, project_data["slug"])
 
 
 
-        if os.path.exists(RSQ_PROJECT_NAME):
-            while(os.path.exists(RSQ_PROJECT_NAME)):
+        if os.path.exists(PROJECT_PATH):
+            while(os.path.exists(PROJECT_PATH)):
                 project_data["slug"] = raw_input("Project with project key exists, Enter new key for the project : ")
             project_data["slug"] = project_data["slug"].replace(" ","-").replace("_","-")\
             .replace("/","-").replace("\\","-").replace(".","-").replace(",","-").replace(";",'-').replace(":","-").replace("--","-")
-            RSQ_PROJECT_NAME = os.path.join(RSQ_PROJECTS_HOME, project_data["slug"])
-            os.mkdir(RSQ_PROJECT_NAME, 0755)
+            PROJECT_PATH = os.path.join(RSQ_PROJECTS_HOME, project_data["slug"])
+            os.mkdir(PROJECT_PATH, 0755)
         else:
-            os.mkdir(RSQ_PROJECT_NAME, 0755)
-        project_data["log"] = os.path.join(RSQ_PROJECT_NAME, 'r2_gromacs.log')
-        project_data["config"] = os.path.join(RSQ_PROJECT_NAME, 'r2_gromacs.config')
+            os.mkdir(PROJECT_PATH, 0755)
+        project_data["log"] = os.path.join(PROJECT_PATH, 'r2_gromacs.log')
+        project_data["config"] = os.path.join(PROJECT_PATH, 'r2_gromacs.config')
         fh_log = open(project_data["log"], 'w', 0755)
         fh = open(project_data["config"], 'w', 0755)
-
+        
+        
+        # preprocessing data
+        project_data["path"] = PROJECT_PATH
+        
+        
         proj1 = DBEngine(RSQ_DB_PATH)
 
         cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
@@ -155,7 +160,7 @@ Project created with id '%s',
         else:
             os.remove(project_data["log"])
             os.remove(project_data["config"])
-            os.rmdir(RSQ_PROJECT_NAME)
+            os.rmdir(PROJECT_PATH)
             mesg =  "ERROR \n%s " %project_data['title']
             cprint(mesg, 'red')
 

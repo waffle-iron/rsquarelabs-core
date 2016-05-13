@@ -35,7 +35,7 @@ USER_HOME_FOLDER = os.getenv('HOME')
 RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
 RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json') # not very much needed
 RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-RSQ_DB_PATH = os.path.join(RSQ_HOME, 'tables.db')
+RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
 
 
 proj1 = DBEngine(RSQ_DB_PATH)
@@ -107,9 +107,10 @@ def projects_list():
 def projects_status(project_id):
     project_data = proj1.do_select("SELECT  id, slug, title, short_note, tags, user_email, type, path, log, config, date from projects where id = %s"%(int(project_id))).fetchone()
     content =  open(os.path.join(HTML_DIR, 'project-status.html')).read()
-    project_log = open(project_data[8],'r').read()
+    project_log = open(project_data[8], 'r').read()
     project_config = open(project_data[9], 'r').read()
-    return template(content, project_log=project_log, project_config=project_config, project_data=project_data, now=now)
+    file_list = os.listdir(project_data[7])
+    return template(content, file_list=file_list, project_log=project_log, project_config=project_config, project_data=project_data, now=now)
 
 
 
