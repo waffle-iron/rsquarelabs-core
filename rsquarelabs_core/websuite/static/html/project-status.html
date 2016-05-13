@@ -12,10 +12,6 @@
 % include('header.html')
 <div class="container">
 
-        <!--<hr>-->
-    <!--<h2 class="text-center">No such Project Exists to my knowledge</h2>-->
-    <!--<p class="text-center">Either the <strong></strong> is deleted or permissions are restricted</p>-->
-
 
 
     %if project_data:
@@ -57,6 +53,15 @@
         %else:
             <pre>{{project_config}}</pre>
         %end
+
+    % else:
+
+
+
+        <hr>
+    <h2 class="text-center">No such Project Exists to my knowledge</h2>
+    <p class="text-center">Either the <strong></strong> is deleted or permissions are restricted</p>
+
 
     %end
 </div>

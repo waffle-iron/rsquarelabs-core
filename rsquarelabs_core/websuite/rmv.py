@@ -106,10 +106,16 @@ def projects_list():
 @app.route('/websuite/project/:project_id')
 def projects_status(project_id):
     project_data = proj1.do_select("SELECT  id, slug, title, short_note, tags, user_email, type, path, log, config, date from projects where id = %s"%(int(project_id))).fetchone()
-    content =  open(os.path.join(HTML_DIR, 'project-status.html')).read()
-    project_log = open(project_data[8], 'r').read()
-    project_config = open(project_data[9], 'r').read()
-    file_list = os.listdir(project_data[7])
+
+    if project_data is None:
+        project_log= None
+        project_config = None
+        file_list = None
+    else:
+        project_log = open(project_data[8], 'r').read()
+        project_config = open(project_data[9], 'r').read()
+        file_list = os.listdir(project_data[7])
+    content = open(os.path.join(HTML_DIR, 'project-status.html')).read()
     return template(content, file_list=file_list, project_log=project_log, project_config=project_config, project_data=project_data, now=now)
 
 
