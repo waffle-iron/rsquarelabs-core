@@ -27,6 +27,7 @@ RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
 RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
 RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
 
+CURRENT_PATH = os.getcwd()
 
 if not os.path.exists(RSQ_PROJECTS_HOME):
     os.mkdir(RSQ_PROJECTS_HOME,0755)
@@ -40,25 +41,55 @@ if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
 
 
 from rsquarelabs_core.db_engine import DBEngine
+from engines.r2_gromacs.gromacs import hello, get_files
+from engines.r2_gromacs.gromacs import ProteinLigMin
+
 
 TOOL_NAME = "r2_gromacs"
 
 def current_date():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def show_comands():
+    """
+
+    :return:
+    """
+    available_commands = ['init', 'hello', 'help', 'importfiles', 'createtopology', 'createwaterbox']
+    print "Available commands : \n"
+    for command in available_commands:
+        print command
 
 def main():
     # Get the arguments list
     cmdargs = str(sys.argv)
     #print cmdargs
 
+    # check if config file exist in the working dir
+
+    files_list = os.listdir(CURRENT_PATH)
+    is_config_file_avaliable = False
+
+    for file in files_list:
+        if file == "r2_gromacs.config":
+            is_config_file_avaliable = True
+
+    obj = ProteinLigMin(
+        ligand_file='ligand.gro',
+        ligand_topology_file='ligand.itp',
+        protein_file='protein.pdb',
+        working_dir='./',
+        verbose=True,
+        quiet=False
+    )
+
+#
     if 'init' in cmdargs:
+        if is_config_file_avaliable:
+            print "ERROR! You can't start project in this directory"
+            exit()
         print "Lets start the project"
 
         # check and create folder rsquarelabsProjects in $HOME
-
-
-
-        current_folder =  os.getcwd()
 
         project_data = {}
         project_data["title"] = ""
@@ -92,20 +123,19 @@ def main():
             .replace("/","-").replace("\\","-").replace(".","-").replace(",","-").replace(";",'-').replace(":","-").replace("--","-")
 
 
-
         customize_name = raw_input("Creating this project id as [%s], Do you wish to change ? (y/n , default=n): "%generated_project_id)
+
 
         if customize_name.lower() == 'n' or customize_name == '':
             project_data["slug"] = generated_project_id
+
         else:
             while(project_data["slug"].lstrip() == ""):
                 project_data["slug"]  = raw_input("Enter the project_key : (tak1-modelling-trail1)")
         project_data["date"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-
         # join rsq proj home + slug
         PROJECT_PATH = os.path.join(RSQ_PROJECTS_HOME, project_data["slug"])
-
 
 
         if os.path.exists(PROJECT_PATH):
@@ -121,12 +151,10 @@ def main():
         project_data["config"] = os.path.join(PROJECT_PATH, 'r2_gromacs.config')
         fh_log = open(project_data["log"], 'w', 0755)
         fh = open(project_data["config"], 'w', 0755)
-        
-        
+
         # preprocessing data
         project_data["path"] = PROJECT_PATH
-        
-        
+
         proj1 = DBEngine(RSQ_DB_PATH)
 
         cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
@@ -142,10 +170,6 @@ def main():
                            project_data["type"],
                            project_data["date"],
                            ))
-
-
-
-
 
         if cur.rowcount: # if created into db
             from random import randint
@@ -164,12 +188,32 @@ Project created with id '%s',
             mesg =  "ERROR \n%s " %project_data['title']
             cprint(mesg, 'red')
 
+    elif 'hello' in cmdargs:
+        hello()
 
+    elif 'help' in cmdargs:
+        show_comands()
 
+    elif 'importfiles' in cmdargs:
+        if is_config_file_avaliable:
+            get_files(CURRENT_PATH)
+        else:
+            print "ERROR! This directory do not have project details"
+
+    elif 'createtopology' in cmdargs:
+
+        obj.pdb2gmx_proc()
+
+    elif 'createwaterbox' in cmdargs:
+
+        obj.prepare_system()
+        obj.solvate_complex()
 
 
     else:
-        print "ERROR: please try 'r2_gromacs init'"
+        print "ERROR: "
+        show_comands()
+
 
 
 if __name__ == '__main__':
