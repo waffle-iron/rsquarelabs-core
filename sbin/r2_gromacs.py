@@ -54,7 +54,7 @@ def show_comands():
 
     :return:
     """
-    available_commands = ['init', 'hello', 'help', 'importfiles', 'createtopology', 'createwaterbox']
+    available_commands = ['init', 'hello', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex']
     print "Available commands : \n"
     for command in available_commands:
         print command
@@ -208,7 +208,10 @@ Project created with id '%s',
 
         obj.prepare_system()
         obj.solvate_complex()
+    elif 'neutralisecomplex' in cmdargs:
 
+        obj.write_em_mdp()
+        obj.add_ions()
 
     else:
         print "ERROR: "
