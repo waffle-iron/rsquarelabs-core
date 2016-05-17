@@ -1,6 +1,14 @@
 import sqlite3, os, logging
 
-logging.basicConfig(filename='DBEngine.log', level=logging.DEBUG)
+
+USER_HOME_FOLDER = os.getenv('HOME')
+RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
+RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json') # not very much needed
+RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
+RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
+RSQ_DB_LOG = os.path.join(RSQ_HOME, 'DBEngine.log')
+
+logging.basicConfig(filename=RSQ_DB_LOG, level=logging.DEBUG)
 class DBEngine:
 
     def __init__(self, db_name):
@@ -16,7 +24,7 @@ class DBEngine:
             # TODO - Need improvements
             self.conn.execute(tables_structure)
         except Exception as e:
-            print e
+            #print e
             pass
 
         self.cur = self.conn.cursor()

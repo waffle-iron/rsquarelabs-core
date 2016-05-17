@@ -12,24 +12,19 @@
 % include('header.html')
 <div class="container">
 
-    %if project_log == None:
-        <p>Unable to read project log file.</p>
-    %end
-    % if project_config == None:
-        <p>Unable to read the project config file.</p>
-    <hr>
-    <h2 class="text-center">No such Project Exists to my knowledge</h2>
-    <p class="text-center">Either the <strong>{{project_path}}</strong> is deleted or permissions are restricted</p>
-    %end
 
-    %if project_config != None:
+
+    %if project_data:
         <div class="row">
 
-            <div class="col-md-6"><h1>Project Status  </h1></div>
+            <div class="col-md-6">
+                <h1>{{project_data[2]}} <small>{{project_data[1]}}</small></h1>
+                <p>{{project_data[3]}}</p>
+            </div>
             <div class="col-md-4 col-md-offset-2">
 
                    <div class="input-group">
-                  <input type="text" value="{{project_user_email}}" class="form-control" placeholder="Search for...">
+                  <input type="text" value="" class="form-control" placeholder="Search for...">
                   <span class="input-group-btn">
                     <button class="btn btn-secondary" type="button">Notify Me!</button>
                   </span>
@@ -38,25 +33,35 @@
 
             </div>
 
-            </div>
+        </div>
+
+    <ol>
+        % for file in file_list:
+            <li>{{file}}</li>
+        % end
+    </ol>
+
+        %if project_log == None:
+            <p>Unable to read project log file.</p>
+        %else:
+            <pre>{{project_log}}</pre>
+        %end
+
+
+        % if project_config == None:
+            <p>Unable to read the project config file.</p>
+        %else:
+            <pre>{{project_config}}</pre>
+        %end
+
+    % else:
+
 
 
         <hr>
-        <div class="row">
-            <div class="col-md-12">
+    <h2 class="text-center">No such Project Exists to my knowledge</h2>
+    <p class="text-center">Either the <strong></strong> is deleted or permissions are restricted</p>
 
-
-
-                <h4>Project Config</h4>
-                <pre>{{project_config}}</pre>
-
-                <hr>
-                <h4>Project Log</h4>
-                <small>Last updated at : {{project_log_updated_time}}</small>
-                <pre>{{project_log}}</pre>
-
-            </div>
-        </div>
 
     %end
 </div>
