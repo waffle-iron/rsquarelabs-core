@@ -1,6 +1,0 @@
-import os
-
-HOME_PATH = os.getenv('HOME')
-HOME_LISTS = os.listdir(HOME_PATH)
-print HOME_PATH
-print HOME_LISTS
