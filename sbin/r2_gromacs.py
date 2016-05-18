@@ -1,9 +1,12 @@
 __author__ = 'rrmerugu'
 
 # from optparse import OptionParser
-from termcolor import colored, cprint
-import sys, os, json, requests
+import os
+import sys
 from datetime import datetime
+
+from termcolor import cprint
+
 # get argument list using sys module
 
 # TODO - Need improvements
@@ -40,8 +43,7 @@ if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
 
 
 
-from rsquarelabs_core.db_engine import DBEngine
-from engines.r2_gromacs.gromacs import hello, get_files
+from engines.db_engine import DBEngine
 from engines.r2_gromacs.gromacs import ProteinLigMin
 
 

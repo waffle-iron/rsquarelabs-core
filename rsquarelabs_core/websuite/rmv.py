@@ -1,12 +1,14 @@
 __author__ = 'rrmerugu'
 
-from bottle import Bottle, request, static_file, template, redirect
-import os, sys
-import bottle as bottle2
-from rsquarelabs_core.utils import start_the_process
-import json
-
+import os
+import sys
 from datetime import datetime
+
+import bottle as bottle2
+from bottle import Bottle, request, static_file, template, redirect
+
+from rsquarelabs_core.utils import start_the_process
+
 BASE_DIR    = os.path.join(os.path.dirname(os.path.dirname(__file__)),'websuite')
 STATIC_DIR  = os.path.join(BASE_DIR, 'static')
 
@@ -24,7 +26,7 @@ JS_DIR      = os.path.join(STATIC_DIR, 'js')
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
 sys.path.append(CORE_DIR)
-from rsquarelabs_core.db_engine import DBEngine
+from engines.db_engine import DBEngine
 
 
 # print BASE_DIR
