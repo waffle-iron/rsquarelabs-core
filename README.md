@@ -2,15 +2,14 @@
 
 [![Build Status](https://travis-ci.org/rsquarelabs/rsquarelabs-core.svg?branch=dev)](https://travis-ci.org/rsquarelabs/rsquarelabs-core)
 [![Requirements Status](https://requires.io/github/rsquarelabs/rsquarelabs-core/requirements.svg?branch=dev)](https://requires.io/github/rsquarelabs/rsquarelabs-core/requirements/?branch=dev)
-[![Documentation Status](https://readthedocs.org/projects/rsquarelabs-core/badge/?version=dev)](http://docs.rsquarelabs.org/en/dev/?badge=dev)
 
-![rsquarelabs-core hero ](docs/images/rsquarelabs-hero.jpg)
+![rsquarelabs-core hero ](_docs/images/rsquarelabs-hero.jpg)
 
 This is the library of automation pipeline modules
 
 [Website](http://rsquarelabs.org) |
-[Documentation](http://docs.rsquarelabs.org/) |
-[Installation](http://docs.rsquarelabs.org/en/dev/install/) |
+[Documentation](https://github.com/rsquarelabs/rsquarelabs-core/wiki/) |
+[Installation](https://github.com/rsquarelabs/rsquarelabs-core/wiki/en/dev/install/) |
 [Mailing List](https://groups.google.com/d/forum/rsquarelabs-core) |
 [Gitter Chat](https://gitter.im/rsquarelabs/rsquarelabs-core)
 
@@ -58,9 +57,9 @@ Want to join an open source project? Now it's your chance!
 Don't know what you want to help out with? Well here are some areas that we could use help with:
 
 - rsquarelabs-core scientific thoughts,
-- rsquarelabs-core [technical stack](docs/notes/technical-stack.md)
+- rsquarelabs-core [technical stack](_docs/notes/technical-stack.md)
 - rsquarelabs-core code - see [milestones](https://github.com/rsquarelabs/rsquarelabs-core/milestones) and [issues](https://github.com/rsquarelabs/rsquarelabs-core/issues) for more
-- rsquarelabs-core [documentation](http://docs.rsquarelabs.org), [tutorials](docs/tutorials/index.md) and [examples](docs/examples/index.md)
+- rsquarelabs-core [documentation](https://github.com/rsquarelabs/rsquarelabs-core/wiki), [tutorials](https://github.com/rsquarelabs/rsquarelabs-core/wiki/Tutorials) and [examples](https://github.com/rsquarelabs/rsquarelabs-core/wiki/Examples)
 - rsquarelabs-core [website](http://rsquarelabs.org)
 - If you want to join our community as a contributor, please leave a message as [@rrmerugu](https://twitter.com/rrmerugu)
 
