@@ -1,15 +1,38 @@
 __author__ = 'rrmerugu'
 
+"""
+This module provides the implementation of 'gromacs' tool step by step with the help of followed by available
+commands and saves the successful project details accordingly to the project directory.
+
+Usage:
+init - initiates the project.
+hello - greetings.
+help - provides the available commands to be executed.
+importfiles - gathers the simulation files to the project directory
+createtopology -
+createwaterbox -
+neutralisecomplex -
+minimize -
+
+Note:
+Command 'init' should not be executed in the project directory
+Command 'importfiles' should be executed in the project directory
+"""
+
 # from optparse import OptionParser
 from termcolor import colored, cprint
 import sys, os, json, requests
 from datetime import datetime
 # get argument list using sys module
 
+
 # TODO - Need improvements
 sys.argv
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
+"""
+Path appended of rsquarelabs_core to sys for accessing modules inside rsquarelabs_core
+"""
 sys.path.append(CORE_DIR)
 
 
@@ -27,20 +50,27 @@ RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
 RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
 RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
 
+"""
+Readable (str) describing the current path.
+"""
 CURRENT_PATH = os.getcwd()
 
+# Checks 'rsquarelabsProjects' path exists or not, if not make a directory.
 if not os.path.exists(RSQ_PROJECTS_HOME):
     os.mkdir(RSQ_PROJECTS_HOME,0755)
 
+# Checks '.rsquarelabs' path exists or not, if not make a directory.
 if not os.path.exists(RSQ_HOME):
     os.mkdir(RSQ_HOME,0755)
 
+# Checks '.config.json' path exists or not, if not make a directory.
 if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
     os.mkdir(RSQ_PROJECTS_CONFIG, 0755)
 
 
-
+# importing db_engine module.
 from rsquarelabs_core.db_engine import DBEngine
+# importing gromacs module.
 from engines.r2_gromacs.gromacs import hello, get_files
 from engines.r2_gromacs.gromacs import ProteinLigMin
 
@@ -48,11 +78,15 @@ from engines.r2_gromacs.gromacs import ProteinLigMin
 TOOL_NAME = "r2_gromacs"
 
 def current_date():
+    """
+    This method returns date and time of initiated project.
+
+    :return: returns (str) date and time.
+    """
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 def show_comands():
     """
-
-    :return:
+    This method provides commands for processing the project using gromacs tool and prints the available commands
     """
     available_commands = ['init', 'hello', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex', 'minimize']
     print "Available commands : \n"
@@ -62,9 +96,9 @@ def show_comands():
 def main():
     # Get the arguments list
     cmdargs = str(sys.argv)
-    #print cmdargs
 
-    # check if config file exist in the working dir
+
+    # Check if config file exist in the working dir.
 
     files_list = os.listdir(CURRENT_PATH)
     is_config_file_avaliable = False
@@ -73,6 +107,7 @@ def main():
         if file == "r2_gromacs.config":
             is_config_file_avaliable = True
 
+    # Creating a object to the ProteinLigMin class
     obj = ProteinLigMin(
         ligand_file='ligand.gro',
         ligand_topology_file='ligand.itp',
@@ -82,14 +117,13 @@ def main():
         quiet=False
     )
 
-#
+    #
     if 'init' in cmdargs:
         if is_config_file_avaliable:
             print "ERROR! You can't start project in this directory"
             exit()
         print "Lets start the project"
 
-        # check and create folder rsquarelabsProjects in $HOME
 
         project_data = {}
         project_data["title"] = ""
@@ -99,12 +133,6 @@ def main():
         project_data["slug"] = ""
         project_data["path"] = ""
         project_data["type"] = TOOL_NAME
-
-        # project_data['config'] = os.path.join(project_data["path"], 'r2_gromacs.json')
-        # project_data['log'] = os.path.join(project_data["path"], 'r2_gromacs.log')
-
-
-
 
 
         while( project_data["title"].lstrip() == ""):
