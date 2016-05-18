@@ -44,7 +44,7 @@ if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
 
 
 from rsquarelabs_core.engines.db_engine import DBEngine
-from rsquarelabs_core.engines.r2_gromacs.gromacs import ProteinLigMin
+from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin
 
 
 TOOL_NAME = "r2_gromacs"

@@ -1,4 +1,4 @@
 __author__ = 'rrmerugu'
 
 from .server import server_run
-from . import jsmol, static
+from . import  static
