@@ -13,7 +13,7 @@ sys.path.append(CORE_DIR)
 #
 ###########################################################
 
-from rsquarelabs_core.websuite.rmv import server_start_cmd, server_run
+from rsquarelabs_core.websuite.server import server_start_cmd, server_run
 from rsquarelabs_core.utils import brower_open, browser_register
 
 

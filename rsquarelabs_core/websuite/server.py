@@ -26,7 +26,7 @@ JS_DIR      = os.path.join(STATIC_DIR, 'js')
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
 sys.path.append(CORE_DIR)
-from engines.db_engine import DBEngine
+from rsquarelabs_core.engines.db_engine import DBEngine
 
 
 # print BASE_DIR
