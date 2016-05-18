@@ -1,0 +1,19 @@
+site_name: RSQUARELABS CORE
+site_url: http://docs.rsquarelabs.org
+canonical_url: http://docs.rsquarelabs.org
+docs_dir: docs
+use_directory_urls: false
+pages:
+- Home: index.md
+- Tutorials:
+    - index: tutorials/index.md
+- Examples:
+    - index: examples/index.md
+- Dev Guides:
+    - Editor Preferences: dev-guides/editors.md
+- Notes:
+    - Cloud Computing in CADD: notes/cloud-computing.md
+    - Technical Stack: notes/technical-stack.md
+theme: readthedocs
+copyright: Copyright &copy; 2016 <a href="https://twitter.com/rrmerugu">Ravi RT Merugu</a>
+google_analytics: ['UA-71847416-1', 'rsquarelabs.org']

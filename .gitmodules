@@ -1,0 +1,6 @@
+[submodule "engines/gromacs"]
+	path = engines/gromacs
+	url = https://github.com/rsquarelabs/r2_gromacs.git
+[submodule "engines/r2_gromacs"]
+	path = engines/r2_gromacs
+	url = https://github.com/rsquarelabs/r2_gromacs.git
