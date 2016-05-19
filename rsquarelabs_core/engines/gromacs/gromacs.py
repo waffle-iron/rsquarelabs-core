@@ -1,12 +1,12 @@
-import argparse
-import os
 import shutil
-import subprocess
+import argparse
 import sys
-
-from core import settings
+import os
+import subprocess
+import shlex
 from core.messages import welcome_message, backup_folder_already_exists, \
     write_em_mpd_data, create_em_mdp_data
+from core import settings
 
 
 class ProteinLigMin(object):
@@ -14,7 +14,7 @@ class ProteinLigMin(object):
         self.ligand_file_path = kwargs.pop('ligand_file')
         self.ligand_topology_file_path = kwargs.pop('ligand_topology_file')
         self.protein_file_path = kwargs.pop('protein_file')
-        self.working_dir = kwargs.pop('working_dir')
+        self.working_dir = kwargs.pop('working_dir') or None
 
         self.verbose = kwargs.pop('verbose')
         self.quiet = kwargs.pop('quiet')
@@ -41,16 +41,35 @@ class ProteinLigMin(object):
     def run_process(step_no, step_name, command):
         print "INFO: Attempting to execute " + step_name + \
               " [STEP:" + step_no + "]"
-        ret = subprocess.call(command, shell=True)
-        if ret != 0:
-            if ret < 0:
+
+        try:
+            pop = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+
+            ret = pop.poll()
+            pro_id = pop.pid
+
+            if ret == None:
+                print 'Completed!'
+                return pro_id
+
+            else:
                 print "HEADS UP: Killed by signal :(", -ret
                 sys.exit()
-            else:
-                print "HEADS UP: Command failed with return code", ret
-                sys.exit()
-        else:
-            print 'Completed!'
+
+        except Exception as e:
+            print "HEADS UP: Command failed"
+            sys.exit()
+
+
+        # if ret != 0:
+        #     if ret < 0:
+        #         print "HEADS UP: Killed by signal :(", -ret
+        #         sys.exit()
+        #     else:
+        #         print "HEADS UP: Command failed with return code", ret
+        #         sys.exit()
+        # else:
+        #     print 'Completed!'
 
     def gather_files(self):
         if not os.path.isfile(self.ligand_file_path):
@@ -193,13 +212,14 @@ class ProteinLigMin(object):
         self.run_process(step_no, step_name, command)
 
         print ">STEP4 : Initiating Procedure to Solvate Complex"
-        genbox = settings.g_prefix + "genbox"
+        solvate = settings.g_prefix + "solvate"
         step_no = "4"
         step_name = "Solvating the Box"
-        command = genbox + " -cp " + self.working_dir + "newbox.gro -p " + \
+        command = solvate + " -cp " + self.working_dir + "newbox.gro -p " + \
             self.working_dir + "topol.top -cs spc216.gro -o " + \
             self.working_dir + "solv.gro >> " + self.working_dir + \
             "step4.log 2>&1"
+        print command
         self.run_process(step_no, step_name, command)
 
     def write_em_mdp(self):
@@ -233,6 +253,7 @@ class ProteinLigMin(object):
             "topol.top -o " + self.working_dir + "ions.tpr -po " + \
             self.working_dir + "mdout.mdp > " + self.working_dir + \
             "step5.log 2>&1"
+        print command
         self.run_process(step_no, step_name, command)
 
         # calculating the charge of the system
@@ -251,7 +272,7 @@ class ProteinLigMin(object):
         # TODO: This charge varibale might break the code
         print "Charge of the system is " + charge
         charge = float(charge)
-        charge = round(charge)
+        charge = int(round(charge))
 
         if charge > 0:
             print "System has positive charge ."
@@ -311,6 +332,7 @@ class ProteinLigMin(object):
                 + "topol.top -o " + self.working_dir + "em.tpr -po " +\
                 self.working_dir + "mdout.mdp -maxwarn 3 > " + self.working_dir\
                 + "step7.log 2>&1"
+            print command
             self.run_process(step_no, step_name, command)
 
             step_no = "8"
@@ -320,7 +342,7 @@ class ProteinLigMin(object):
                 self.working_dir + "em.gro -o " + self.working_dir + \
                 "em.trr -e " + self.working_dir + "em.edr -x " + \
                 self.working_dir + "em.xtc -g " + self.working_dir + \
-                "em.log > " + self.working_dir + "step8.log 2>&1"
+                "em.log "
             self.run_process(step_no, step_name, command)
         else:
             print "Exiting on user request "
@@ -437,3 +459,43 @@ if __name__ == '__main__':
     obj.add_ions()
     obj.create_em_mdp()
     obj.minimize()
+
+def hello():
+    print "Hello World!!!"
+
+def get_files(pwd):
+
+    protein_file_formats = [".pdb", ".gro"]
+    ligand_file_formats = [".pdb", ".gro"]
+    ligand_topology_file_formats = [".itp"]
+
+    ligand_file = ""
+    ligand_topology_file = ""
+    protein_file = ""
+
+
+    ligand_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.gro"
+    ligand_topology_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.itp"
+    protein_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/protein.pdb"
+
+    while not os.path.isfile(ligand_file):
+        ligand_file = raw_input("Enter the path for ligand file : ")
+        for format in ligand_file_formats:
+            if ligand_file.endswith(format) and os.path.isfile(ligand_file):
+                break
+
+    while not os.path.isfile(ligand_topology_file):
+        ligand_topology_file = raw_input("Enter the path for ligand topology file : ")
+        for format in ligand_topology_file_formats:
+            if ligand_file.endswith(format) and os.path.isfile(ligand_topology_file):
+                break
+
+    while not os.path.isfile(protein_file):
+        protein_file = raw_input("Enter the path for protein file : ")
+        for format in protein_file_formats:
+            if protein_file.endswith(format) and os.path.isfile(protein_file):
+                break
+
+    shutil.copy2(ligand_file, pwd)
+    shutil.copy2(ligand_topology_file, pwd)
+    shutil.copy2(protein_file, pwd)
