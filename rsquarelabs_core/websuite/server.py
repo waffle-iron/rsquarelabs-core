@@ -5,7 +5,7 @@ from datetime import datetime
 import bottle as bottle2
 from bottle import Bottle, request, static_file, template, redirect
 
-from rsquarelabs_core.utils import start_the_process
+
 
 BASE_DIR    = os.path.join(os.path.dirname(os.path.dirname(__file__)),'websuite')
 STATIC_DIR  = os.path.join(BASE_DIR, 'static')
@@ -14,7 +14,7 @@ DOCS_DIR    = os.path.join(STATIC_DIR, 'docs')
 CSS_DIR     = os.path.join(STATIC_DIR, 'css')
 JS_DIR      = os.path.join(STATIC_DIR, 'js')
 
-
+from rsquarelabs_core.utils import run_process
 from rsquarelabs_core.engines.db_engine import DBEngine
 from rsquarelabs_core.config import RSQ_DB_PATH
 
@@ -118,8 +118,11 @@ def server_run():
     app.run(host='localhost', port=9090, debug=False, reloader=True, liveport=9999) #, quiet=True
 
 
+"""
+this is depricated
+"""
 def server_start_cmd():
     cmd = "nohup python %s/../bin/r2_server_start.py > /dev/null & " %(os.path.dirname(os.path.dirname(__file__)) )
-    start_the_process(cmd)
+    run_process(cmd)
 
 

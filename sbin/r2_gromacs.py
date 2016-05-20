@@ -4,9 +4,7 @@ __VERSION__ = "0.1dev"
 import os, sys
 from datetime import datetime
 from termcolor import cprint
-from rsquarelabs_core.config import RSQ_PROJECTS_HOME, RSQ_DB_PATH
-from rsquarelabs_core.engines.db_engine import DBEngine
-from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin, import_files
+
 
 """
 adds the rsquarelabs-core module to this script path to access the modules inside rsquarelabs-core
@@ -14,6 +12,13 @@ adds the rsquarelabs-core module to this script path to access the modules insid
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
 sys.path.append(CORE_DIR)
+
+"""
+rsquarelabs_core should be imported after the CORE_DIR is added to sys.path
+"""
+from rsquarelabs_core.config import RSQ_PROJECTS_HOME, RSQ_DB_PATH
+from rsquarelabs_core.engines.db_engine import DBEngine
+from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin, import_files
 
 
 """
@@ -39,8 +44,6 @@ def show_comands():
 def main():
     # Get the arguments list
     cmdargs = str(sys.argv)
-    #print cmdargs
-
     # check if config file exist in the working dir
 
     files_list = os.listdir(CURRENT_PATH)

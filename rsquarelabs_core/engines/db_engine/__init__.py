@@ -1,6 +1,7 @@
 import sqlite3, os, logging
 from rsquarelabs_core.config import  RSQ_DB_LOG
 
+
 """
 db_engine is a module built as database handler across the project.
 db_engine uses sqlite as the database .
