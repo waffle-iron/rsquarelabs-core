@@ -1,22 +1,27 @@
 __author__ = 'rrmerugu'
+import subprocess, shlex, sys, webbrowser
 
 
+def run_process(step_no, step_name, command):
+    print "INFO: Attempting to execute " + step_name + \
+          " [STEP:" + step_no + "]"
+    try:
+        pop = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+        ret = pop.poll()
+        pro_id = pop.pid
 
-import subprocess, webbrowser
+        if ret == None:
+            print 'Completed!'
+            return pro_id
 
+        else:
+            print "HEADS UP: Killed by signal :(", -ret
+            sys.exit()
 
+    except Exception as e:
+        print "HEADS UP: Command failed"
+        sys.exit()
 
-
-def start_the_process(cmd):
-    """
-    log this to ~/.r2_labs/processes.log
-    """
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    out, err = p.communicate()
-    result = out.split('\n')
-    # for lin in result:
-    #     if not lin.startswith('#'):
-    #         print(lin)
 
 
 

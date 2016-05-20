@@ -1,9 +1,7 @@
 __author__ = 'rrmerugu'
 
-import os
-import sys
+import os, sys
 from datetime import datetime
-
 import bottle as bottle2
 from bottle import Bottle, request, static_file, template, redirect
 
@@ -11,42 +9,18 @@ from rsquarelabs_core.utils import start_the_process
 
 BASE_DIR    = os.path.join(os.path.dirname(os.path.dirname(__file__)),'websuite')
 STATIC_DIR  = os.path.join(BASE_DIR, 'static')
-
 HTML_DIR  = os.path.join(STATIC_DIR, 'html')
 DOCS_DIR    = os.path.join(STATIC_DIR, 'docs')
 CSS_DIR     = os.path.join(STATIC_DIR, 'css')
 JS_DIR      = os.path.join(STATIC_DIR, 'js')
 
 
-# USER_HOME_FOLDER = os.getenv('HOME')
-# RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-# RSQ_HOME_PROJECTS_LIST = os.path.join(RSQ_HOME, 'projects-list.json')
-
-
-BIN_DIR = os.path.dirname(os.path.abspath(__file__))
-CORE_DIR = os.path.join(BIN_DIR, '../')
-sys.path.append(CORE_DIR)
 from rsquarelabs_core.engines.db_engine import DBEngine
-
-
-# print BASE_DIR
-# print STATIC_DIR
-# print DOCS_DIR
-
-USER_HOME_FOLDER = os.getenv('HOME')
-RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
-RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json') # not very much needed
-RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
-
+from rsquarelabs_core.config import RSQ_DB_PATH
 
 proj1 = DBEngine(RSQ_DB_PATH)
 
-
-# print index_html
-
 app = Bottle()
-#
 now = datetime.now().strftime("%Y %b, %d %H:%M:%S %p")
 bottle2.TEMPLATE_PATH.insert(0,HTML_DIR)
 
@@ -62,19 +36,10 @@ def rmv():
     return template(content, file_name=file_name,now=now)
 
 
-
-# @app.route('/websuite/rmv/:name')
-# def rmv_external(name):
-#
-#     content = open(os.path.join(HTML_DIR, 'rmv.html')).read()
-#     return template(content , name=name)
-
-
 @app.route('/index')
 @app.route('/home')
 @app.route('/')
 @app.route('/websuite')
-# @app.route('/websuite/')
 def goto_index():
     redirect('/websuite/index.html')
 

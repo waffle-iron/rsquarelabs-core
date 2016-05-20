@@ -1,17 +1,6 @@
 # Developer Docs
 
-
- 
-[Use Cases](use-cases.md) | 
-
-
-
-## Preface for Scientists
-
-
-
-
-## Preface for Developers
+[Use Cases](usecases.md) | [Developer Setup](setup.md)
 
 
 

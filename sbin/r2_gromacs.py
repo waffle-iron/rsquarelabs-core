@@ -1,60 +1,35 @@
 __author__ = 'rrmerugu'
+__VERSION__ = "0.1dev"
 
-# from optparse import OptionParser
-import os
-import sys
+import os, sys
 from datetime import datetime
-
 from termcolor import cprint
+from rsquarelabs_core.config import RSQ_PROJECTS_HOME, RSQ_DB_PATH
+from rsquarelabs_core.engines.db_engine import DBEngine
+from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin, import_files
 
-# get argument list using sys module
-
-# TODO - Need improvements
-sys.argv
+"""
+adds the rsquarelabs-core module to this script path to access the modules inside rsquarelabs-core
+"""
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
 sys.path.append(CORE_DIR)
 
 
-
-CLIENT_KEY = "6TCYXyf4lwTh601S1NpgbhlkyYgD5OQLbUvUq9Rf"
-CLIENT_SECRET = "fZZC0uZ0aaoDICMeDsA6JXcf0ztSO7HW6t3elbQ3y4MxWdM11xGEG6l2R9zRLGxjntS5NT3bG3RcHDUL0mmJoT76PLJYHFDtSrDQFw5d6zHJ5XsyaZ9kYjX84VY82CYx"
-
-__VERSION__ = "0.1dev"
-
-
-
-USER_HOME_FOLDER = os.getenv('HOME')
-RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
-RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
-RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
-
+"""
+Used to check if the command is executed in side a project or not.
+If the command is executed inside a project, 'init' will be disabled and the rest will be active.
+"""
 CURRENT_PATH = os.getcwd()
-
-if not os.path.exists(RSQ_PROJECTS_HOME):
-    os.mkdir(RSQ_PROJECTS_HOME,0755)
-
-if not os.path.exists(RSQ_HOME):
-    os.mkdir(RSQ_HOME,0755)
-
-if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
-    os.mkdir(RSQ_PROJECTS_CONFIG, 0755)
-
-
-
-from rsquarelabs_core.engines.db_engine import DBEngine
-from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin, import_files
-
-
 TOOL_NAME = "r2_gromacs"
+
+
 
 def current_date():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 def show_comands():
     """
-
-    :return:
+    Displays the command arguements available
     """
     available_commands = ['init', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex', 'minimize']
     print "Available commands : \n"
