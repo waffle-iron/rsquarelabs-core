@@ -15,8 +15,6 @@ logging.basicConfig(filename=RSQ_DB_LOG, level=logging.DEBUG)
 class DBEngine:
 
     def __init__(self, db_name):
-        logging.debug('This msg should go to log file')
-        logging.info('init is running')
         self.do_connect(db_name)
 
     def do_connect(self, db_name):
@@ -24,18 +22,20 @@ class DBEngine:
         sql_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tables.sqlite')
         tables_structure = open(sql_file_path).read()
         try:
-            # TODO - Need improvements
+            """
+            this will try to create the tables, if they exist, it will pass
+            """
             self.conn.execute(tables_structure)
         except Exception as e:
-            #print e
+            logging.debug(e)
             pass
 
         self.cur = self.conn.cursor()
         return self.conn
 
     def do_select(self, cmd):
-        cursor = self.cur.execute(cmd)
-        return cursor
+        data = self.cur.execute(cmd)
+        return data
 
     def do_insert(self, cmd):
         self.cur.execute(cmd)
