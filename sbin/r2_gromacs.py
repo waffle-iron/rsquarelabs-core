@@ -181,7 +181,7 @@ Project created with id '%s',
 
     elif 'createtopology' in cmdargs:
 
-        obj.pdb2gmx_proc()
+        obj.create_topology()
 
     elif 'createwaterbox' in cmdargs:
 

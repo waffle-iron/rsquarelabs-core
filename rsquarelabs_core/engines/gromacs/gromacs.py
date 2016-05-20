@@ -113,7 +113,7 @@ class ProteinLigMin(object):
         shutil.copy2(self.ligand_topology_file_path,
                      self.working_dir + 'ligand.itp')
 
-    def pdb2gmx_proc(self):
+    def create_topology(self):
         """
         This will create the topology for the protein, more about this command is explained in rsquarelabs-core/engines/gromacs/README.md
 
@@ -524,7 +524,7 @@ if __name__ == '__main__':
 
     obj.welcome()
     obj.gather_files()
-    obj.pdb2gmx_proc()
+    obj.create_topology()
     obj.prepare_system()
     obj.solvate_complex()
     obj.write_em_mdp()

@@ -33,11 +33,28 @@ pip install rsquarelabs-core
 
 ## Usage
 ```
-#first: import package
-from rsquarelabs_core import gromacs
+# first: import the class that does protein-ligand minimisation
+from rsquarelabs_core.engines.gromacs import ProteinLigMin
 
-#second: call the method you want to execute
-gromacs.create_water_box()
+# Create and object with input files 
+obj = ProteinLigMin(
+    ligand_file='ligand.gro',
+    ligand_topology_file='ligand.itp',
+    protein_file='protein.pdb',
+    working_dir='./',
+    verbose=True,
+    quiet=False
+)
+
+# call the method you want to start with
+obj.create_topology()
+obj.prepare_system()
+obj.write_em_mdp()
+obj.add_ions()
+obj.write_emreal_mdp()
+obj.minimize()
+
+ 
 
 ```
 
@@ -48,7 +65,7 @@ gromacs.create_water_box()
 ## Why rsquarelabs-core
 1. scaffolding the project
 2. project management
-3. Tracking the project
+3. Tracking the project via webclient
 
 
 ## Community
