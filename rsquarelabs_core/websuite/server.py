@@ -18,7 +18,7 @@ from rsquarelabs_core.utils import run_process
 from rsquarelabs_core.engines.db_engine import DBEngine
 from rsquarelabs_core.config import RSQ_DB_PATH
 
-proj1 = DBEngine(RSQ_DB_PATH)
+db_object = DBEngine(RSQ_DB_PATH)
 
 app = Bottle()
 now = datetime.now().strftime("%Y %b, %d %H:%M:%S %p")
@@ -63,16 +63,14 @@ def docs():
 
 @app.route('/websuite/projects.html')
 def projects_list():
-    # projects_list = open(RSQ_HOME_PROJECTS_LIST).read()
-    # projects_data = json.loads(projects_list)
-    projects_data = proj1.do_select("SELECT id, slug, title, tags, user_email, type, path, log, date from projects")
+    projects_data = db_object.do_select("SELECT id, slug, title, tags, user_email, type, path, log, date from projects")
     content =  open(os.path.join(HTML_DIR, 'projects.html')).read()
     return template(content, projects_list=projects_data,now=now)
 
 
 @app.route('/websuite/project/:project_id')
 def projects_status(project_id):
-    project_data = proj1.do_select("SELECT  id, slug, title, short_note, tags, user_email, type, path, log, config, date from projects where id = %s"%(int(project_id))).fetchone()
+    project_data = db_object.do_select("SELECT  id, slug, title, short_note, tags, user_email, type, path, log, config, date from projects where id = %s"%(int(project_id))).fetchone()
 
     if project_data is None:
         project_log= None
