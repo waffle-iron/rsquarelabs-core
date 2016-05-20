@@ -135,9 +135,9 @@ def main():
         # preprocessing data
         project_data["path"] = PROJECT_PATH
 
-        proj1 = DBEngine(RSQ_DB_PATH)
+        db_object = DBEngine(RSQ_DB_PATH)
 
-        cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
+        cur = db_object.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
                         VALUES('%s', '%s', '%s', '%s', '%s','%s', '%s', '%s', '%s', '%s')"
                         % (project_data["title"],
                            project_data["tags"],
