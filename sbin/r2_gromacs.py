@@ -44,7 +44,7 @@ if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
 
 
 from rsquarelabs_core.engines.db_engine import DBEngine
-from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin
+from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin, import_files
 
 
 TOOL_NAME = "r2_gromacs"
@@ -56,7 +56,7 @@ def show_comands():
 
     :return:
     """
-    available_commands = ['init', 'hello', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex', 'minimize']
+    available_commands = ['init', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex', 'minimize']
     print "Available commands : \n"
     for command in available_commands:
         print command
@@ -190,15 +190,14 @@ Project created with id '%s',
             mesg =  "ERROR \n%s " %project_data['title']
             cprint(mesg, 'red')
 
-    elif 'hello' in cmdargs:
-        hello()
+
 
     elif 'help' in cmdargs:
         show_comands()
 
     elif 'importfiles' in cmdargs:
         if is_config_file_avaliable:
-            get_files(CURRENT_PATH)
+            import_files(CURRENT_PATH)
         else:
             print "ERROR! This directory do not have project details"
 
@@ -218,7 +217,7 @@ Project created with id '%s',
 
     elif 'minimize' in cmdargs:
 
-        obj.create_em_mdp()
+        obj.write_emreal_mdp()
         obj.minimize()
 
     else:

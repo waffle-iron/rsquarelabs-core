@@ -8,16 +8,56 @@ from core.messages import welcome_message, backup_folder_already_exists, \
     write_em_mpd_data, create_em_mdp_data
 from core import settings
 
+"""
+This module aimed at writing python wrapper around the tool Gromacs(www.gromacs.org) - a molecular dynamics package used
+primarily in the field of Computational Drug Discovery also called as Computer Aided Drug Discovery(CADD) and others.
+
+Brief about Gromacs :
+GROMACS is a versatile package to perform molecular dynamics, i.e. simulate the Newtonian equations of motion for
+systems with hundreds to millions of particles.It is primarily designed for biochemical molecules like proteins,
+lipids and nucleic acids that have a lot of complicated bonded interactions.
+Read more at http://www.gromacs.org/About_Gromacs
+
+
+Read rsquarelabs-core/engines/gromacs/README.md for more info.
+"""
+
 
 class ProteinLigMin(object):
+    """
+    ProteinLigandMin is a class that has all the methods to run a Protein-ligand Minimisation protocol using the tool -
+    gromacs(gromacs.org).
+    The module is designed based on tutorial by Justin Lemkul from Benvan Labs
+    (http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/complex/)
+    """
     def __init__(self, *args, **kwargs):
-        self.ligand_file_path = kwargs.pop('ligand_file')
-        self.ligand_topology_file_path = kwargs.pop('ligand_topology_file')
-        self.protein_file_path = kwargs.pop('protein_file')
-        self.working_dir = kwargs.pop('working_dir') or None
 
-        self.verbose = kwargs.pop('verbose')
-        self.quiet = kwargs.pop('quiet')
+        """
+        To run the gromacs simulation of protein ligand complex, we need 3 files:
+        1. protein structure file in .pdb format
+        2. ligand structure file in *.gro format,
+        3. ligand topology file in *.itp format
+        :param args:
+        :param kwargs:
+        """
+
+        self.ligand_file_path = kwargs.get('ligand_file', None)
+        self.ligand_topology_file_path = kwargs.get('ligand_topology_file', None)
+        self.protein_file_path = kwargs.get('protein_file', None)
+
+        if self.ligand_file_path is None or self.ligand_topology_file_path is None or self.protein_file_path is None:
+            print "Please provide 1. protein structure file, 2. ligand structure file, 3.ligand topology file"
+            print "Terminating with input error "
+            exit()
+
+        """
+        the working directory inside the project ie., if the project path is /home/me/rsquareProjects/moldyn and if 'run01'
+        is given as working dir, it will create  /home/me/rsquareProjects/moldyn/run01 and will do all the runs, but by default
+        all the jobs will executed in  /home/me/rsquareProjects/moldyn unless working_dir is specified
+        """
+        self.working_dir = kwargs.get('working_dir', './')
+        self.verbose = kwargs.get('verbose', False)
+        self.quiet = kwargs.get('quiet', False)
 
         # A user cant use both the verbose and the quiet flag together
         if self.verbose is True and self.quiet is True:
@@ -31,11 +71,15 @@ class ProteinLigMin(object):
         """
         print welcome_message
 
-    def check_file(self, filename):
-        pass
-
-    def exit_program(self):
-        pass
+    @staticmethod
+    def file_copy(source, destination):
+        # TODO: There must be something better in the os module?
+        in_file = open(source, 'r')
+        out_file = open(destination, 'w')
+        temp = in_file.read()
+        out_file.write(temp)
+        in_file.close()
+        out_file.close()
 
     @staticmethod
     def run_process(step_no, step_name, command):
@@ -108,6 +152,16 @@ class ProteinLigMin(object):
                      self.working_dir + 'ligand.itp')
 
     def pdb2gmx_proc(self):
+        """
+        This will create the topology for the protein, more about this command is explained in rsquarelabs-core/engines/gromacs/README.md
+
+        Testcases:
+        1. Takes protein.pdb as input and generates protein.gro, topol.top as output files
+
+        Log file : step2.log
+
+        :return:
+        """
         print ">STEP1 : Initiating Procedure to generate topology for protein"
         pdb2gmx = settings.g_prefix + "pdb2gmx"
         step_no = "1"
@@ -120,6 +174,22 @@ class ProteinLigMin(object):
         self.run_process(step_no, step_name, command)
 
     def prepare_system(self):
+        """
+        This will make the system that we will use for the rest of simulations
+
+        1. This will combine both protein.gro + ligand.gro and makes system.gro
+        2. includes ligand.itp into the topol,top
+        3. Adds ligand identifier(typically UNK) into topol.top at the end
+
+        Testcases:
+        1. check if new file  'system.gro' is created
+        2. Check for the presense of string '#include "ligand.itp"' in topol.top
+        3. Check the ligand identifier(typically UNK ) presence in topol.top
+
+        LogFile: None
+
+        :return:
+        """
 
         print ">STEP2 : Initiating Precedure to make system[Protein+Ligand]"
         start_from_line = 3  # or whatever line I need to jump to
@@ -199,8 +269,19 @@ class ProteinLigMin(object):
         print "CHEERS: STEP[2] SUCCESSFULLY COMPLETED :)\n\n\n"
 
     def solvate_complex(self):
-        # editconf -f system.gro -o newbox.gro -bt cubic -d 1 -c
-        # genbox -cp newbox.gro -cs spc216.gro -p topol.top -o solv.gro
+        """
+        This will define the unitcell for the simulation and solvates the cell/box.
+
+        Testcases:
+        1. creates files 'newbox.gro', 'solv.gro'
+
+        Logfiles:
+        1. step3.log
+        2. step4.log
+
+        :return:
+        """
+
 
         print ">STEP3 : Initiating Procedure to Solvate Complex"
         editconf = settings.g_prefix + "editconf"
@@ -223,6 +304,15 @@ class ProteinLigMin(object):
         self.run_process(step_no, step_name, command)
 
     def write_em_mdp(self):
+        """
+        Writes the configuration file *.mdp needed for the run
+
+        Testcase:
+        1. file 'em.mdp' should be created
+
+        :return:
+        """
+
         print ">NOTE: Writing em.mdp"
         # TODO: Better name
         some_file = open(self.working_dir + "em.mdp", "w")
@@ -230,17 +320,19 @@ class ProteinLigMin(object):
         some_file.write(str(data))
         some_file.close()
 
-    @staticmethod
-    def file_copy(source, destination):
-        # TODO: There must be something better in the os module?
-        in_file = open(source, 'r')
-        out_file = open(destination, 'w')
-        temp = in_file.read()
-        out_file.write(temp)
-        in_file.close()
-        out_file.close()
+
 
     def add_ions(self):
+        """
+        Add ions to the system to neutralise/add charge to the system.
+
+        Testcase:
+        1. creates output file 'ions.tpr'
+        2. creates output file 'solv_ions.gro'
+        
+        :return:
+        """
+
         print ">STEP5 : Initiating Procedure to Add Ions & Neutralise the " \
               "Complex"
 
@@ -305,14 +397,32 @@ class ProteinLigMin(object):
 
         print "DOUBLE CHEERS: SUCCESFULY PREPARED SYSTEM FOR SIMULATION"
 
-    def create_em_mdp(self):
+    def write_emreal_mdp(self):
         # TODO: better name
+        """
+        Creates em_real.mdp which is used for minimisation
+
+        Testcase:
+        1. creates output file 'em_real.mdp'
+
+        :return:
+        """
         some_file = open(self.working_dir + "em_real.mdp", "w")
         em_mdp = create_em_mdp_data
         some_file.write(em_mdp)
         print "CHEERS: em_real.mdp SUCCESSFULLY GENERATED :)"
 
     def minimize(self):
+        """
+        Minimises the protein-ligand system,
+
+        Test cases:
+        1. creates output file 'em.tpr'
+        2. creates output files em.gro, em.edr , em.xtc, em.trr, em.log
+
+
+        :return:
+        """
         print "MESSAGE: "
         t = raw_input(
             "Did you check your complex !! do you wish to continue: (y/n)")
@@ -457,13 +567,21 @@ if __name__ == '__main__':
     obj.solvate_complex()
     obj.write_em_mdp()
     obj.add_ions()
-    obj.create_em_mdp()
+    obj.write_emreal_mdp()
     obj.minimize()
 
 def hello():
     print "Hello World!!!"
 
-def get_files(pwd):
+def import_files(project_path):
+
+    """
+    This will import the files into the projects into the path. All the files imported via this method should be backed to
+    somewhere in <HOME>/.rsquarelabs or the database.db, so that when the use clicks recreate project, that will be done.
+
+    :param project_path: the project path to which the files should be imported
+    :return:
+    """
 
     protein_file_formats = [".pdb", ".gro"]
     ligand_file_formats = [".pdb", ".gro"]
@@ -474,9 +592,9 @@ def get_files(pwd):
     protein_file = ""
 
 
-    ligand_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.gro"
-    ligand_topology_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.itp"
-    protein_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/protein.pdb"
+    # ligand_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.gro"
+    # ligand_topology_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.itp"
+    # protein_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/protein.pdb"
 
     while not os.path.isfile(ligand_file):
         ligand_file = raw_input("Enter the path for ligand file : ")
@@ -496,6 +614,6 @@ def get_files(pwd):
             if protein_file.endswith(format) and os.path.isfile(protein_file):
                 break
 
-    shutil.copy2(ligand_file, pwd)
-    shutil.copy2(ligand_topology_file, pwd)
-    shutil.copy2(protein_file, pwd)
+    shutil.copy2(ligand_file, project_path)
+    shutil.copy2(ligand_topology_file, project_path)
+    shutil.copy2(protein_file, project_path)
