@@ -7,3 +7,36 @@ WebServer is built using a micro web framework - bottle (www.bottlepy.org). Its 
 
 
 
+## To create new route or page
+
+new route means new page in webclient server(http://localhost:9090 ).
+
+```
+# In server.py
+
+@app.route('/websuite/myown-file.html')
+def myown_file():
+    print "Im new route"
+    
+    DO WHATEVER YOU WANT TO DO
+    
+    
+    # get the file content from HTML_DIR(rsquarelabs-core/websuite/static/html/) 
+    content =  open(os.path.join(HTML_DIR, 'myown-file.html')).read()
+    # now = now helps to print the timestamp when the page is executed by server. it appears on the footer of page.
+    return template(content, now=now)    
+
+
+@app.route('/websuite/project/:project_id')
+def projects_view(project_id):
+    print "Im accessing %s project" %project_id
+    
+    DO WHATEVER YOU WANT TO DO
+    
+    
+    # get the file content from HTML_DIR(rsquarelabs-core/websuite/static/html/) 
+    content =  open(os.path.join(HTML_DIR, 'project-view.html')).read()
+    # now = now helps to print the timestamp when the page is executed by server. it appears on the footer of page.
+    return template(content, now=now)    
+
+```
