@@ -1,8 +1,23 @@
 __author__ = 'rrmerugu'
-import subprocess, shlex, sys, webbrowser
+import subprocess, shlex, sys, webbrowser, logging
 from rsquarelabs_core.engines.db_engine import  DBEngine
-from rsquarelabs_core.config import RSQ_DB_PATH
+from rsquarelabs_core.config import RSQ_DB_PATH, RSQ_LOG_PATH
 from datetime import datetime
+
+# logging.basicConfig(filename=RSQ_LOG_PATH, level=logging.DEBUG)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# create a file handler
+handler = logging.FileHandler(RSQ_LOG_PATH)
+handler.setLevel(logging.INFO)
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(lineno)d - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(handler)
+
+
 
 db_object = DBEngine(RSQ_DB_PATH)
 
@@ -24,31 +39,28 @@ def run_process(step_no, step_name, command, tool_name, log_file):
     :param command: the command to execute
     :return:
     """
-    print "INFO: Attempting to execute " + step_name + \
-          " [STEP:" + step_no + "]"
+    logger.info( "INFO: Attempting to execute " + step_name + " [STEP:" + step_no + "]")
     try:
-
-        ## insert the command into the db with status (inactive)
-        cur = db_object.do_insert("""
-        insert into project_activity(tool_name,step_no, step_name , command, status, log_file, created_at )
-        VALUES ('%s','%s','%s','%s','%s','%s','%s')
-        """ %(tool_name, step_no, step_name, command, 'to_run', log_file, datetime.now()  ))
-
+        ## insert the command into the db with status (to_run)
+        # TODO - THIS IS INSECURE VERSION , use ? way instead of %s
+        cmd = 'INSERT INTO project_activity (tool_name,step_no, step_name , command, status, log_file, created_at )\
+         VALUES( "%s",%s,"%s","%s","%s","%s","%s")'% (tool_name, int(step_no), step_name, command, "to_run", log_file, str(datetime.now()) )
+        cur = db_object.do_insert(cmd)
+        logger.debug(cur)
         pop = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
         ret = pop.poll()
         pro_id = pop.pid
-
-
         if ret == None:
-            print 'Completed!'
+            logger.info(  'Completed!')
             return pro_id
 
         else:
-            print "HEADS UP: Killed by signal :(", -ret
+            logger.info( "HEADS UP: Killed by signal :(", -ret)
             sys.exit()
 
     except Exception as e:
-        print "HEADS UP: Command failed"
+        logger.error(e)
+        logger.info( "HEADS UP: Command failed")
         sys.exit()
 
 

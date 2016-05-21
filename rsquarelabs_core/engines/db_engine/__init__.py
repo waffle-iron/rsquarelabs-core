@@ -1,5 +1,4 @@
 import sqlite3, os, logging
-# from rsquarelabs_core.config import  RSQ_DB_LOG
 from rsquarelabs_core.config import  RSQ_DB_LOG, RSQ_DB_PATH
 
 """
@@ -10,7 +9,17 @@ db_engine uses sqlite as the database .
 """
 
 
-logging.basicConfig(filename=RSQ_DB_LOG, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# create a file handler
+handler = logging.FileHandler(RSQ_DB_LOG)
+handler.setLevel(logging.INFO)
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(handler)
+
 
 class DBEngine:
 
@@ -25,17 +34,23 @@ class DBEngine:
         try:
             self.conn.executescript(tables_structure)
         except Exception as e:
-            logging.debug(e)
+            logger.debug(e)
             pass
 
         self.cur = self.conn.cursor()
         return self.conn
 
     def do_select(self, cmd):
+
         data = self.cur.execute(cmd)
         return data
 
     def do_insert(self, cmd):
-        self.cur.execute(cmd)
-        self.conn.commit()
+        try:
+            self.cur.execute(cmd)
+            self.conn.commit()
+        except Exception as e:
+            logger.error(e)
+            logger.error(e.message)
         return self.cur
+

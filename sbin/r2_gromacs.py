@@ -14,6 +14,8 @@ CORE_DIR = os.path.join(BIN_DIR, '../')
 sys.path.append(CORE_DIR)
 
 
+
+
 """
 rsquarelabs_core should be imported after the CORE_DIR is added to sys.path
 """
@@ -55,7 +57,7 @@ def main():
             is_config_file_avaliable = True
             project_key = CURRENT_PATH.split('/')[-1]
             project_id = db_object.do_select("select id from projects where slug='%s'"%project_key).fetchone()[0]
-            print project_id
+
 
 
     obj = ProteinLigMin(
@@ -159,7 +161,7 @@ def main():
             mesg = """============================================
 Project created with id '%s',
 ============================================""" % cur.lastrowid
-            fh_config.write(cur.lastrowid)
+            # fh_config.write(cur.lastrowid)
             cprint(mesg, "green")
         else:
             os.remove(project_data["log"])

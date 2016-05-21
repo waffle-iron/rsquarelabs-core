@@ -16,7 +16,7 @@ CREATE TABLE project_activity
     step_no TEXT NOT NULL,
     step_name TEXT NOT NULL,
     command TEXT NOT NULL,
-    pid TEXT NOT NULL,
+    pid TEXT,
     status TEXT NOT NULL,
     log_file TEXT NOT NULL,
     created_at TEXT,
