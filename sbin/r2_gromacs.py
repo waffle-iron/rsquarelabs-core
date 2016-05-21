@@ -13,6 +13,7 @@ BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
 sys.path.append(CORE_DIR)
 
+
 """
 rsquarelabs_core should be imported after the CORE_DIR is added to sys.path
 """
@@ -27,7 +28,7 @@ If the command is executed inside a project, 'init' will be disabled and the res
 """
 CURRENT_PATH = os.getcwd()
 TOOL_NAME = "r2_gromacs"
-
+db_object = DBEngine(RSQ_DB_PATH)
 
 
 def current_date():
@@ -52,6 +53,10 @@ def main():
     for file in files_list:
         if file == "r2_gromacs.config":
             is_config_file_avaliable = True
+            project_key = CURRENT_PATH.split('/')[-1]
+            project_id = db_object.do_select("select id from projects where slug='%s'"%project_key).fetchone()[0]
+            print project_id
+
 
     obj = ProteinLigMin(
         ligand_file='ligand.gro',
@@ -70,7 +75,6 @@ def main():
         print "Lets start the project"
 
         # check and create folder rsquarelabsProjects in $HOME
-
         project_data = {}
         project_data["title"] = ""
         project_data["tags"] = ""
@@ -79,11 +83,6 @@ def main():
         project_data["slug"] = ""
         project_data["path"] = ""
         project_data["type"] = TOOL_NAME
-
-        # project_data['config'] = os.path.join(project_data["path"], 'r2_gromacs.json')
-        # project_data['log'] = os.path.join(project_data["path"], 'r2_gromacs.log')
-
-
 
 
 
@@ -130,12 +129,12 @@ def main():
         project_data["log"] = os.path.join(PROJECT_PATH, 'r2_gromacs.log')
         project_data["config"] = os.path.join(PROJECT_PATH, 'r2_gromacs.config')
         fh_log = open(project_data["log"], 'w', 0755)
-        fh = open(project_data["config"], 'w', 0755)
+        fh_config = open(project_data["config"], 'w', 0755)
 
         # preprocessing data
         project_data["path"] = PROJECT_PATH
 
-        db_object = DBEngine(RSQ_DB_PATH)
+
 
         cur = db_object.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
                         VALUES('%s', '%s', '%s', '%s', '%s','%s', '%s', '%s', '%s', '%s')"
@@ -160,6 +159,7 @@ def main():
             mesg = """============================================
 Project created with id '%s',
 ============================================""" % cur.lastrowid
+            fh_config.write(cur.lastrowid)
             cprint(mesg, "green")
         else:
             os.remove(project_data["log"])
@@ -175,7 +175,8 @@ Project created with id '%s',
 
     elif 'importfiles' in cmdargs:
         if is_config_file_avaliable:
-            import_files(CURRENT_PATH)
+
+            import_files(CURRENT_PATH, project_id)
         else:
             print "ERROR! This directory do not have project details"
 

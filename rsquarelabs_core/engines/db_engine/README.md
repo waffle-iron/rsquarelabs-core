@@ -9,15 +9,8 @@ Here is the tutorial for using sqlite with python https://docs.python.org/2/libr
 
 ### Create a new table 
 
-If you want to create a new table, just create the table structure in tables.sqlite file, do the below
-```
-In DBEngine.do_connect() method 
-
-# execute sql command 
-self.conn.execute('''CREATE TABLE stocks
-             (date text, trans text, symbol text, qty real, price real)''')
-              
-```
+If you want to create a new table, just create the table structure in tables.sqlite file, write the new table structure in schema.sql
+ 
 
 To access the methods inside DBEngine create an `db_object = DBEngine('/<path>/database.db')`
 

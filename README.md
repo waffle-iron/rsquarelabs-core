@@ -9,7 +9,7 @@ This is the library of automation pipeline modules
 
 [Website](http://rsquarelabs.org) |
 [Documentation](https://github.com/rsquarelabs/rsquarelabs-core/wiki/) |
-[Installation](https://github.com/rsquarelabs/rsquarelabs-core/wiki/en/dev/install/) |
+[Installation](https://github.com/rsquarelabs/rsquarelabs-core/wiki#installation) |
 [Mailing List](https://groups.google.com/d/forum/rsquarelabs-core) |
 [Gitter Chat](https://gitter.im/rsquarelabs/rsquarelabs-core)
 

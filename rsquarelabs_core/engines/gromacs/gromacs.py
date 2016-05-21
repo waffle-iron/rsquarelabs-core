@@ -3,6 +3,7 @@ from rsquarelabs_core.utils import run_process
 from core.messages import welcome_message, backup_folder_already_exists, \
     write_em_mpd_data, create_em_mdp_data
 from core import settings
+from rsquarelabs_core.engines.db_engine import DBEngine, RSQ_DB_PATH
 
 """
 This module aimed at writing python wrapper around the tool Gromacs(www.gromacs.org) - a molecular dynamics package used
@@ -18,6 +19,9 @@ Read more at http://www.gromacs.org/About_Gromacs
 Read rsquarelabs-core/engines/gromacs/README.md for more info.
 """
 
+db_object = DBEngine(RSQ_DB_PATH)
+
+TOOL_NAME = 'r2_gromacs'
 
 class ProteinLigMin(object):
     """
@@ -128,12 +132,13 @@ class ProteinLigMin(object):
         pdb2gmx = settings.g_prefix + "pdb2gmx"
         step_no = "1"
         step_name = "Topology Generation"
+        log_file = "step-%s.log"%step_no
         command = pdb2gmx + " -f " + self.working_dir + "protein.pdb -o " + \
             self.working_dir + "protein.gro -ignh -p " + \
             self.working_dir + "topol.top -i " + self.working_dir + \
             "posre.itp -ff gromos53a6 -water spc >> " + \
-            self.working_dir + "step1.log 2>&1"
-        run_process(step_no, step_name, command)
+            self.working_dir + log_file +" 2>&1"
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
     def prepare_system(self):
         """
@@ -249,21 +254,23 @@ class ProteinLigMin(object):
         editconf = settings.g_prefix + "editconf"
         step_no = "3"
         step_name = "Defining the Box"
+        log_file = "step-%s.log" % step_no
         command = editconf + " -f " + self.working_dir + "system.gro -o " + \
             self.working_dir + "newbox.gro -bt cubic -d 1 -c >> " + \
-            self.working_dir + "step3.log 2>&1"
-        run_process(step_no, step_name, command)
+            self.working_dir + log_file +" 2>&1"
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         print ">STEP4 : Initiating Procedure to Solvate Complex"
         solvate = settings.g_prefix + "solvate"
         step_no = "4"
         step_name = "Solvating the Box"
+        log_file = "step-%s.log" % step_no
         command = solvate + " -cp " + self.working_dir + "newbox.gro -p " + \
             self.working_dir + "topol.top -cs spc216.gro -o " + \
-            self.working_dir + "solv.gro >> " + self.working_dir + \
-            "step4.log 2>&1"
+            self.working_dir + "solv.gro >> " + self.working_dir + log_file + \
+            " 2>&1"
         print command
-        run_process(step_no, step_name, command)
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
     def write_em_mdp(self):
         """
@@ -302,13 +309,14 @@ class ProteinLigMin(object):
         grompp = settings.g_prefix + "grompp"
         step_no = "5"
         step_name = "Check Ions "
+        log_file = "step-%s.log" % step_no
         command = grompp + " -f " + self.working_dir + "em.mdp -c " + \
             self.working_dir + "solv.gro -p " + self.working_dir + \
             "topol.top -o " + self.working_dir + "ions.tpr -po " + \
-            self.working_dir + "mdout.mdp > " + self.working_dir + \
-            "step5.log 2>&1"
+            self.working_dir + "mdout.mdp > " + self.working_dir + log_file +\
+            " 2>&1"
         print command
-        run_process(step_no, step_name, command)
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         # calculating the charge of the system
         # TODO: What is this doing? word??? Better name!
@@ -334,12 +342,13 @@ class ProteinLigMin(object):
             genion = settings.g_prefix + "genion"
             step_no = "6"
             step_name = "Adding Negative Ions "
+            log_file = "step-%s.log" % step_no
             command = genion + " -s " + self.working_dir + "ions.tpr -o " + \
                 self.working_dir + "solv_ions.gro -p " + self.working_dir + \
                 "topol.top -nname CL -nn " + str(charge) + " -g " + \
-                self.working_dir + "step6.log 2>&1" \
+                self.working_dir + log_file + " 2>&1" \
                 " << EOF\nSOL\nEOF"
-            run_process(step_no, step_name, command)
+            run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         elif charge < 0:
             print "charge is negative"
@@ -347,11 +356,13 @@ class ProteinLigMin(object):
             genion = settings.g_prefix + "genion"
             step_no = "6"
             step_name = "Adding Positive Ions "
+            log_file = "step-%s.log" % step_no
             command = genion + " -s " + self.working_dir + "ions.tpr -o " + \
                 self.working_dir + "solv_ions.gro -p " + self.working_dir + \
-                "topol.top -pname NA -np " + str(-charge) + \
+                "topol.top -pname NA -np " + str(-charge) + "-g" +  \
+                 self.working_dir + log_file + " 2>&1" \
                 " << EOF\nSOL\nEOF"
-            run_process(step_no, step_name, command)
+            run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         elif charge == 0:
             print "System has Neutral charge , No adjustments Required :)"
@@ -398,28 +409,32 @@ class ProteinLigMin(object):
             mdrun = settings.g_prefix + "mdrun"
             step_no = "7"
             step_name = "Prepare files for Minimisation"
+            log_file = "step-%s.log" % step_no
             # max warn 3 only for now
             command = grompp + " -f " + self.working_dir + "em_real.mdp -c " +\
                 self.working_dir + "solv_ions.gro -p " + self.working_dir\
                 + "topol.top -o " + self.working_dir + "em.tpr -po " +\
                 self.working_dir + "mdout.mdp -maxwarn 3 > " + self.working_dir\
-                + "step7.log 2>&1"
+                + log_file + " 2>&1"
             print command
-            run_process(step_no, step_name, command)
+            run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
             step_no = "8"
             step_name = " Minimisation"
+            log_file = "step-%s.log" % step_no
 
             command = mdrun + " -v  -s " + self.working_dir + "em.tpr -c " + \
                 self.working_dir + "em.gro -o " + self.working_dir + \
                 "em.trr -e " + self.working_dir + "em.edr -x " + \
                 self.working_dir + "em.xtc -g " + self.working_dir + \
-                "em.log "
-            run_process(step_no, step_name, command)
+                "em.log  > "  + self.working_dir + log_file + " 2>&1"
+            run_process(step_no, step_name, command,TOOL_NAME, log_file)
         else:
             print "Exiting on user request "
             sys.exit()
 
+
+    """
     def nvt(self):
         print ">STEP9 : Initiating the Procedure to Equiliberate the System"
         print "Beginging Equiliberation with NVT Ensemble"
@@ -427,13 +442,12 @@ class ProteinLigMin(object):
         mdrun = settings.g_prefix + "mdrun"
         step_no = "9"
         step_name = "Preparing files for NVT Equiliberation"
-        # grompp -f nvt.mdp -c em.gro -p topol.top -o nvt.tpr
         command = grompp + "-f " + self.working_dir + "nvt.mdp -c " + \
             self.working_dir + "em.gro -p " + self.working_dir + \
             "topol.top -o " + self.working_dir + "nvt.tpr -po " + \
             self.working_dir + "mdout.mdp -maxwarn 3 > " + \
             self.working_dir + "step9.log 2>&1"
-        run_process(step_no, step_name, command)
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         step_no = "10"
         step_name = "NVT Equiliberation"
@@ -442,7 +456,7 @@ class ProteinLigMin(object):
             + self.working_dir + "nvt.edr -x " + self.working_dir + \
             "nvt.xtc -g " + self.working_dir + "nvt.log > " + self.working_dir\
             + "step10.log 2>&1"
-        run_process(step_no, step_name, command)
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
     def npt(self):
         print ">STEP11 : Initiating the Procedure to Equiliberate the System"
@@ -457,7 +471,7 @@ class ProteinLigMin(object):
             "topol.top -o " + self.working_dir + "npt.tpr -po " + \
             self.working_dir + "mdout.mdp -maxwarn 3 > " + self.working_dir + \
             "step11.log 2>&1"
-        run_process(step_no, step_name, command)
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         step_no = "12"
         step_name = "NPT Equiliberation"
@@ -466,7 +480,7 @@ class ProteinLigMin(object):
             "npt.trr -e " + self.working_dir + "npt.edr -x " + \
             self.working_dir + "npt.xtc -g " + self.working_dir + "npt.log > "\
             + self.working_dir + "step12.log 2>&1"
-        run_process(step_no, step_name, command)
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
     def md(self):
         print "CHEERS :) WE ARE CLOSE TO SUCCESS :):)"
@@ -481,7 +495,7 @@ class ProteinLigMin(object):
             "topol.top -o " + self.working_dir + "md.tpr -po " + \
             self.working_dir + "mdout.mdp -maxwarn 3 > " + self.working_dir + \
             "step13.log 2>&1"
-        run_process(step_no, step_name, command)
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         step_no = "14"
         step_name = "NPT Equiliberation"
@@ -490,8 +504,8 @@ class ProteinLigMin(object):
             self.working_dir + "md.edr -x " + self.working_dir + "md.xtc -g " +\
             self.working_dir + "md.log > " + self.working_dir + \
             "step14.log 2>&1"
-        run_process(step_no, step_name, command)
-
+        run_process(step_no, step_name, command,TOOL_NAME, log_file)
+    """
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -512,8 +526,8 @@ if __name__ == '__main__':
 
     arguments = parser.parse_args()
 
-    # TODO: Think of a better name
-    obj = ProteinLigMin(
+    """
+      obj = ProteinLigMin(
         ligand_file=arguments.ligand,
         ligand_topology_file=arguments.itp,
         protein_file=arguments.protein,
@@ -531,11 +545,19 @@ if __name__ == '__main__':
     obj.add_ions()
     obj.write_emreal_mdp()
     obj.minimize()
+    """
+
 
 def hello():
     print "Hello World!!!"
 
-def import_files(project_path):
+def get_file_info(file):
+    content = open(file).read()
+    file_name = file.split("/")[-1]
+    return [file_name, content]
+
+
+def import_files(project_path, project_id):
 
     """
     This will import the files into the projects into the path. All the files imported via this method should be backed to
@@ -554,9 +576,6 @@ def import_files(project_path):
     protein_file = ""
 
 
-    # ligand_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.gro"
-    # ligand_topology_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/ligand.itp"
-    # protein_file = "/home/nitish/PycharmProjects/rsquarelabs-core/example_files/protein.pdb"
 
     while not os.path.isfile(ligand_file):
         ligand_file = raw_input("Enter the path for ligand file : ")
@@ -575,6 +594,29 @@ def import_files(project_path):
         for format in protein_file_formats:
             if protein_file.endswith(format) and os.path.isfile(protein_file):
                 break
+
+    # import this into the project
+    ligand_structure_info = get_file_info(ligand_file)
+    ligand_topology_info = get_file_info(ligand_topology_file)
+    protien_structure_info = get_file_info(protein_file)
+
+
+    # insert the file info ie., content and file_name
+
+    db_object.do_insert("""
+    INSERT INTO project_files(file_name, file_content, project_id)
+    VALUES('%s','%s','%s')
+    """ %(ligand_structure_info[0],ligand_structure_info[1],project_id))
+    db_object.do_insert("""
+    INSERT INTO project_files(file_name, file_content, project_id)
+    VALUES('%s','%s','%s')
+    """ %(ligand_topology_info[0],ligand_topology_info[1],project_id))
+
+    db_object.do_insert("""
+    INSERT INTO project_files(file_name, file_content, project_id)
+    VALUES('%s','%s','%s')
+    """ %(protien_structure_info[0],protien_structure_info[1],project_id))
+
 
     shutil.copy2(ligand_file, project_path)
     shutil.copy2(ligand_topology_file, project_path)
