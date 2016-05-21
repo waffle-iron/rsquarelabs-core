@@ -72,7 +72,7 @@ def projects_list():
 def projects_view(project_id):
     project_data = db_object.do_select("SELECT  id, slug, title, short_note, tags, user_email, type, path, log, config, date from projects where id = %s"%(int(project_id))).fetchone()
     #TODO = filter by project_id
-    project_activity_data  = db_object.do_select("select id, tool_name, step_no, step_name, command from project_activity ORDER BY id DESC")
+    project_activity_data  = db_object.do_select("select id, tool_name, step_no, step_name, command, pid from project_activity ORDER BY id DESC")
     if project_data is None:
         project_log= None
         project_config = None

@@ -64,7 +64,7 @@ def main():
         ligand_file='ligand.gro',
         ligand_topology_file='ligand.itp',
         protein_file='protein.pdb',
-        working_dir='./',
+        working_dir="%s/"%CURRENT_PATH,
         verbose=True,
         quiet=False
     )
@@ -152,7 +152,7 @@ def main():
                            project_data["date"],
                            ))
 
-        if cur.rowcount: # if created into db
+        if cur.lastrowid: # if created into db
             from random import randint
             project_create_details = project_data # json.loads(project_data)
             project_create_details['project_id'] = randint(1,1000)

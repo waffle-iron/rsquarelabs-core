@@ -12,6 +12,14 @@ source venv/bin/activate
 pip2.7 install -r requirements.txt
 ```
 
+Install Gromacs (www.gromacs.org)
+
+In Mac `brew install gromacs`
+
+In ubuntu/debian `sudo apt-get install gromacs`
+
+In Fedora/CentOS `sudo yum install gromacs`
+
 
 ## File system
 

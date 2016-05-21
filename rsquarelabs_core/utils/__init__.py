@@ -7,10 +7,10 @@ from datetime import datetime
 # logging.basicConfig(filename=RSQ_LOG_PATH, level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 # create a file handler
 handler = logging.FileHandler(RSQ_LOG_PATH)
-handler.setLevel(logging.INFO)
+handler.setLevel(logging.DEBUG)
 # create a logging format
 formatter = logging.Formatter('%(asctime)s - %(lineno)d - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
@@ -42,17 +42,61 @@ def run_process(step_no, step_name, command, tool_name, log_file):
     logger.info( "INFO: Attempting to execute " + step_name + " [STEP:" + step_no + "]")
     try:
         ## insert the command into the db with status (to_run)
+        extra = ""
+        if ">>" in command:
+            extra = " >> %s" % command.split(">>")[1].rstrip()
+            command = command.split(">>")[0].rstrip()
+            cmd_args = shlex.split(command)
+            if "grompp" in command:
+                """
+                Expection for genion command of gromacs because, it needs some data from output to be used for further step.
+                """
+                cmd_args = shlex.split(command).append(extra)
+
+
+        elif "<<" in command:
+            """
+            #ignore <<,  because thhis is given when user input needs to be provided
+            """
+            extra = " << %s"% command.split("<<")[1].rstrip()
+            command = command.split("<<")[0].rstrip()
+            cmd_args =  list(shlex.split(command))
+            cmd_args.append(extra)
+        else:
+            cmd_args = shlex.split(command)
+
+
+
+
         # TODO - THIS IS INSECURE VERSION , use ? way instead of %s
         cmd = 'INSERT INTO project_activity (tool_name,step_no, step_name , command, status, log_file, created_at )\
          VALUES( "%s",%s,"%s","%s","%s","%s","%s")'% (tool_name, int(step_no), step_name, command, "to_run", log_file, str(datetime.now()) )
+
         cur = db_object.do_insert(cmd)
         logger.debug(cur)
-        pop = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
-        ret = pop.poll()
-        pro_id = pop.pid
+
+        fh_stdout = open(log_file, 'wb')
+        fh_stderr = open("%s.err"%log_file, 'wb')
+        process = subprocess.Popen(cmd_args, stdout=fh_stdout, stderr=fh_stderr)
+        print process.pid
+        logger.info("Runing the stepNo: %s, StepName: %s with process id %s"%(step_no, step_name, process.pid))
+        ret = process.poll()
+
+        print "id of data insertion ",cur.lastrowid
+
+        if process.pid is not None:
+            db_object.cur.execute( "UPDATE project_activity SET pid ='%s' where id='%s' " %(process.pid, cur.lastrowid))
+
+
+        ret_data = {}
+        ret_data['pid'] = process.pid
+        ret_data['stdout'] = fh_stdout
+        ret_data['stderr'] = fh_stderr
+
         if ret == None:
             logger.info(  'Completed!')
-            return pro_id
+            return ret_data
+
 
         else:
             logger.info( "HEADS UP: Killed by signal :(", -ret)

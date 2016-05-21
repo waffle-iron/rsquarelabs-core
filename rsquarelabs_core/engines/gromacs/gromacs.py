@@ -132,12 +132,12 @@ class ProteinLigMin(object):
         pdb2gmx = settings.g_prefix + "pdb2gmx"
         step_no = "1"
         step_name = "Topology Generation"
-        log_file = "step-%s.log"%step_no
+        log_file =  self.working_dir + "step-%s.log"%step_no
+
         command = pdb2gmx + " -f " + self.working_dir + "protein.pdb -o " + \
             self.working_dir + "protein.gro -ignh -p " + \
             self.working_dir + "topol.top -i " + self.working_dir + \
-            "posre.itp -ff gromos53a6 -water spc >> " + \
-            self.working_dir + log_file +" 2>&1"
+            "posre.itp -ff gromos53a6 -water spc "
         run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
     def prepare_system(self):
@@ -254,21 +254,19 @@ class ProteinLigMin(object):
         editconf = settings.g_prefix + "editconf"
         step_no = "3"
         step_name = "Defining the Box"
-        log_file = "step-%s.log" % step_no
+        log_file = self.working_dir + "step-%s.log" % step_no
         command = editconf + " -f " + self.working_dir + "system.gro -o " + \
-            self.working_dir + "newbox.gro -bt cubic -d 1 -c >> " + \
-            self.working_dir + log_file +" 2>&1"
+            self.working_dir + "newbox.gro -bt cubic -d 1 -c "
         run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         print ">STEP4 : Initiating Procedure to Solvate Complex"
         solvate = settings.g_prefix + "solvate"
         step_no = "4"
         step_name = "Solvating the Box"
-        log_file = "step-%s.log" % step_no
+        log_file = self.working_dir + "step-%s.log" % step_no
         command = solvate + " -cp " + self.working_dir + "newbox.gro -p " + \
             self.working_dir + "topol.top -cs spc216.gro -o " + \
-            self.working_dir + "solv.gro >> " + self.working_dir + log_file + \
-            " 2>&1"
+            self.working_dir + "solv.gro   "
         print command
         run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
@@ -309,20 +307,22 @@ class ProteinLigMin(object):
         grompp = settings.g_prefix + "grompp"
         step_no = "5"
         step_name = "Check Ions "
-        log_file = "step-%s.log" % step_no
+        log_file = self.working_dir + "step-%s.log" % step_no
+
+        # used to calc the charge, from the output
+        temp_log_file = self.working_dir + "step-%s_temp.log" % step_no
         command = grompp + " -f " + self.working_dir + "em.mdp -c " + \
             self.working_dir + "solv.gro -p " + self.working_dir + \
             "topol.top -o " + self.working_dir + "ions.tpr -po " + \
-            self.working_dir + "mdout.mdp > " + self.working_dir + log_file +\
-            " 2>&1"
+            self.working_dir + "mdout.mdp > " + temp_log_file +" 2>&1"
         print command
         run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         # calculating the charge of the system
         # TODO: What is this doing? word??? Better name!
         word = 'total'  # Your word
-
-        with open(self.working_dir + 'step5.log') as f:
+        print "yo"
+        with open(temp_log_file ) as f:
             for line in f:
                 if word in line:
                     s_line = line.strip().split()
@@ -336,18 +336,18 @@ class ProteinLigMin(object):
         charge = float(charge)
         charge = int(round(charge))
 
+        print "Charge =-=-=-=-=-=-=--=-=-=-==-%s" %charge
+
         if charge > 0:
             print "System has positive charge ."
             print "Adding " + str(charge) + " CL ions to Neutralize the system"
             genion = settings.g_prefix + "genion"
             step_no = "6"
             step_name = "Adding Negative Ions "
-            log_file = "step-%s.log" % step_no
+            log_file = self.working_dir + "step-%s.log" % step_no
             command = genion + " -s " + self.working_dir + "ions.tpr -o " + \
                 self.working_dir + "solv_ions.gro -p " + self.working_dir + \
-                "topol.top -nname CL -nn " + str(charge) + " -g " + \
-                self.working_dir + log_file + " 2>&1" \
-                " << EOF\nSOL\nEOF"
+                "topol.top -nname CL -nn " + str(charge) +  " << EOF\nSOL\nEOF"
             run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         elif charge < 0:
@@ -356,17 +356,16 @@ class ProteinLigMin(object):
             genion = settings.g_prefix + "genion"
             step_no = "6"
             step_name = "Adding Positive Ions "
-            log_file = "step-%s.log" % step_no
+            log_file = self.working_dir + "step-%s.log" % step_no
             command = genion + " -s " + self.working_dir + "ions.tpr -o " + \
                 self.working_dir + "solv_ions.gro -p " + self.working_dir + \
-                "topol.top -pname NA -np " + str(-charge) + "-g" +  \
-                 self.working_dir + log_file + " 2>&1" \
-                " << EOF\nSOL\nEOF"
+                "topol.top -pname NA -np " + str(-charge) +  " << EOF\nSOL\nEOF"
+            print command
             run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
         elif charge == 0:
             print "System has Neutral charge , No adjustments Required :)"
-            self.file_copy('work/ions.tpr', "work/solv_ions.tpr")
+            self.file_copy(self.working_dir +'ions.tpr', self.working_dir+ "solv_ions.tpr")
 
         print "DOUBLE CHEERS: SUCCESFULY PREPARED SYSTEM FOR SIMULATION"
 
@@ -409,25 +408,24 @@ class ProteinLigMin(object):
             mdrun = settings.g_prefix + "mdrun"
             step_no = "7"
             step_name = "Prepare files for Minimisation"
-            log_file = "step-%s.log" % step_no
+            log_file = self.working_dir + "step-%s.log" % step_no
             # max warn 3 only for now
             command = grompp + " -f " + self.working_dir + "em_real.mdp -c " +\
                 self.working_dir + "solv_ions.gro -p " + self.working_dir\
                 + "topol.top -o " + self.working_dir + "em.tpr -po " +\
-                self.working_dir + "mdout.mdp -maxwarn 3 > " + self.working_dir\
-                + log_file + " 2>&1"
+                self.working_dir + "mdout.mdp -maxwarn 3 "
             print command
             run_process(step_no, step_name, command,TOOL_NAME, log_file)
 
             step_no = "8"
             step_name = " Minimisation"
-            log_file = "step-%s.log" % step_no
+            log_file = self.working_dir + "step-%s.log" % step_no
 
             command = mdrun + " -v  -s " + self.working_dir + "em.tpr -c " + \
                 self.working_dir + "em.gro -o " + self.working_dir + \
                 "em.trr -e " + self.working_dir + "em.edr -x " + \
                 self.working_dir + "em.xtc -g " + self.working_dir + \
-                "em.log  > "  + self.working_dir + log_file + " 2>&1"
+                "em.log "
             run_process(step_no, step_name, command,TOOL_NAME, log_file)
         else:
             print "Exiting on user request "
