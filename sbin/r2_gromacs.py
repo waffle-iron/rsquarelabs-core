@@ -70,7 +70,9 @@ def current_date():
     :return: returns (str) date and time.
     """
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-def show_comands():
+
+
+def show_commands():
     """
 
     This method provides commands for processing the project using gromacs tool and prints the available commands
@@ -213,7 +215,7 @@ Project created with id '%s',
 
 
     elif 'help' in cmdargs:
-        show_comands()
+        show_commands()
 
     elif 'importfiles' in cmdargs:
         if is_config_file_avaliable:
@@ -243,7 +245,7 @@ Project created with id '%s',
 
     else:
         print "ERROR: "
-        show_comands()
+        show_commands()
 
 
 
