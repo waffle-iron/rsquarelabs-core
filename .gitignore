@@ -23,3 +23,7 @@ sbin/r2_gromacs.json
 sbin/r2_gromacs.log
 *.db
 
+venv/
+playground/
+
+

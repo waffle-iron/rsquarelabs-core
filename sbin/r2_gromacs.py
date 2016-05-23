@@ -1,4 +1,6 @@
 __author__ = 'rrmerugu'
+__VERSION__ = "0.1dev"
+
 
 """
 This module provides the implementation of 'gromacs' tool step by step with the help of followed by available
@@ -22,12 +24,16 @@ Command 'importfiles' should be executed in the project directory
 # from optparse import OptionParser
 from termcolor import colored, cprint
 import sys, os, json, requests
+
 from datetime import datetime
-# get argument list using sys module
+from termcolor import cprint
 
 
-# TODO - Need improvements
-sys.argv
+
+"""
+adds the rsquarelabs-core module to this script path to access the modules inside rsquarelabs-core
+"""
+
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
 """
@@ -37,45 +43,25 @@ sys.path.append(CORE_DIR)
 
 
 
-CLIENT_KEY = "6TCYXyf4lwTh601S1NpgbhlkyYgD5OQLbUvUq9Rf"
-CLIENT_SECRET = "fZZC0uZ0aaoDICMeDsA6JXcf0ztSO7HW6t3elbQ3y4MxWdM11xGEG6l2R9zRLGxjntS5NT3bG3RcHDUL0mmJoT76PLJYHFDtSrDQFw5d6zHJ5XsyaZ9kYjX84VY82CYx"
-
-__VERSION__ = "0.1dev"
-
-
-
-USER_HOME_FOLDER = os.getenv('HOME')
-RSQ_PROJECTS_HOME = os.path.join(USER_HOME_FOLDER, 'rsquarelabsProjects')
-RSQ_PROJECTS_CONFIG = os.path.join(RSQ_PROJECTS_HOME, '.config.json')
-RSQ_HOME = os.path.join(USER_HOME_FOLDER, '.rsquarelabs')
-RSQ_DB_PATH = os.path.join(RSQ_HOME, 'rsquarelabs.db')
 
 """
-Readable (str) describing the current path.
+rsquarelabs_core should be imported after the CORE_DIR is added to sys.path
+"""
+from rsquarelabs_core.config import RSQ_PROJECTS_HOME, RSQ_DB_PATH
+from rsquarelabs_core.engines.db_engine import DBEngine
+from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin, import_files
+
+
+
+"""
+Used to check if the command is executed in side a project or not.
+If the command is executed inside a project, 'init' will be disabled and the rest will be active.
 """
 CURRENT_PATH = os.getcwd()
 
-# Checks 'rsquarelabsProjects' path exists or not, if not make a directory.
-if not os.path.exists(RSQ_PROJECTS_HOME):
-    os.mkdir(RSQ_PROJECTS_HOME,0755)
-
-# Checks '.rsquarelabs' path exists or not, if not make a directory.
-if not os.path.exists(RSQ_HOME):
-    os.mkdir(RSQ_HOME,0755)
-
-# Checks '.config.json' path exists or not, if not make a directory.
-if not os.path.exists(RSQ_PROJECTS_CONFIG): # not very much needed
-    os.mkdir(RSQ_PROJECTS_CONFIG, 0755)
-
-
-# importing db_engine module.
-from rsquarelabs_core.db_engine import DBEngine
-# importing gromacs module.
-from engines.r2_gromacs.gromacs import hello, get_files
-from engines.r2_gromacs.gromacs import ProteinLigMin
-
-
 TOOL_NAME = "r2_gromacs"
+db_object = DBEngine(RSQ_DB_PATH)
+
 
 def current_date():
     """
@@ -86,9 +72,12 @@ def current_date():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 def show_comands():
     """
+
     This method provides commands for processing the project using gromacs tool and prints the available commands
+
+
     """
-    available_commands = ['init', 'hello', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex', 'minimize']
+    available_commands = ['init', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex', 'minimize']
     print "Available commands : \n"
     for command in available_commands:
         print command
@@ -96,7 +85,6 @@ def show_comands():
 def main():
     # Get the arguments list
     cmdargs = str(sys.argv)
-
 
     # Check if config file exist in the working dir.
 
@@ -106,13 +94,17 @@ def main():
     for file in files_list:
         if file == "r2_gromacs.config":
             is_config_file_avaliable = True
+            project_key = CURRENT_PATH.split('/')[-1]
+            project_id = db_object.do_select("select id from projects where slug='%s'"%project_key).fetchone()[0]
+
+
 
     # Creating a object to the ProteinLigMin class
     obj = ProteinLigMin(
         ligand_file='ligand.gro',
         ligand_topology_file='ligand.itp',
         protein_file='protein.pdb',
-        working_dir='./',
+        working_dir="%s/"%CURRENT_PATH,
         verbose=True,
         quiet=False
     )
@@ -133,6 +125,7 @@ def main():
         project_data["slug"] = ""
         project_data["path"] = ""
         project_data["type"] = TOOL_NAME
+
 
 
         while( project_data["title"].lstrip() == ""):
@@ -178,14 +171,14 @@ def main():
         project_data["log"] = os.path.join(PROJECT_PATH, 'r2_gromacs.log')
         project_data["config"] = os.path.join(PROJECT_PATH, 'r2_gromacs.config')
         fh_log = open(project_data["log"], 'w', 0755)
-        fh = open(project_data["config"], 'w', 0755)
+        fh_config = open(project_data["config"], 'w', 0755)
 
         # preprocessing data
         project_data["path"] = PROJECT_PATH
 
-        proj1 = DBEngine(RSQ_DB_PATH)
 
-        cur = proj1.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
+
+        cur = db_object.do_insert("INSERT INTO projects (title, tags, user_email, slug, short_note, path, config, log, type, date)\
                         VALUES('%s', '%s', '%s', '%s', '%s','%s', '%s', '%s', '%s', '%s')"
                         % (project_data["title"],
                            project_data["tags"],
@@ -199,7 +192,7 @@ def main():
                            project_data["date"],
                            ))
 
-        if cur.rowcount: # if created into db
+        if cur.lastrowid: # if created into db
             from random import randint
             project_create_details = project_data # json.loads(project_data)
             project_create_details['project_id'] = randint(1,1000)
@@ -208,6 +201,7 @@ def main():
             mesg = """============================================
 Project created with id '%s',
 ============================================""" % cur.lastrowid
+            # fh_config.write(cur.lastrowid)
             cprint(mesg, "green")
         else:
             os.remove(project_data["log"])
@@ -216,21 +210,21 @@ Project created with id '%s',
             mesg =  "ERROR \n%s " %project_data['title']
             cprint(mesg, 'red')
 
-    elif 'hello' in cmdargs:
-        hello()
+
 
     elif 'help' in cmdargs:
         show_comands()
 
     elif 'importfiles' in cmdargs:
         if is_config_file_avaliable:
-            get_files(CURRENT_PATH)
+
+            import_files(CURRENT_PATH, project_id)
         else:
             print "ERROR! This directory do not have project details"
 
     elif 'createtopology' in cmdargs:
 
-        obj.pdb2gmx_proc()
+        obj.create_topology()
 
     elif 'createwaterbox' in cmdargs:
 
@@ -244,7 +238,7 @@ Project created with id '%s',
 
     elif 'minimize' in cmdargs:
 
-        obj.create_em_mdp()
+        obj.write_emreal_mdp()
         obj.minimize()
 
     else:
