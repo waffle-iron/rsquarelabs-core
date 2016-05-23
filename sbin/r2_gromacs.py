@@ -1,16 +1,44 @@
 __author__ = 'rrmerugu'
 __VERSION__ = "0.1dev"
 
-import os, sys
+
+"""
+This module provides the implementation of 'gromacs' tool step by step with the help of followed by available
+commands and saves the successful project details accordingly to the project directory.
+
+Usage:
+init - initiates the project.
+hello - greetings.
+help - provides the available commands to be executed.
+importfiles - gathers the simulation files to the project directory
+createtopology -
+createwaterbox -
+neutralisecomplex -
+minimize -
+
+Note:
+Command 'init' should not be executed in the project directory
+Command 'importfiles' should be executed in the project directory
+"""
+
+# from optparse import OptionParser
+from termcolor import colored, cprint
+import sys, os, json, requests
+
 from datetime import datetime
 from termcolor import cprint
+
 
 
 """
 adds the rsquarelabs-core module to this script path to access the modules inside rsquarelabs-core
 """
+
 BIN_DIR = os.path.dirname(os.path.abspath(__file__))
 CORE_DIR = os.path.join(BIN_DIR, '../')
+"""
+Path appended of rsquarelabs_core to sys for accessing modules inside rsquarelabs_core
+"""
 sys.path.append(CORE_DIR)
 
 
@@ -24,20 +52,30 @@ from rsquarelabs_core.engines.db_engine import DBEngine
 from rsquarelabs_core.engines.gromacs.gromacs import ProteinLigMin, import_files
 
 
+
 """
 Used to check if the command is executed in side a project or not.
 If the command is executed inside a project, 'init' will be disabled and the rest will be active.
 """
 CURRENT_PATH = os.getcwd()
+
 TOOL_NAME = "r2_gromacs"
 db_object = DBEngine(RSQ_DB_PATH)
 
 
 def current_date():
+    """
+    This method returns date and time of initiated project.
+
+    :return: returns (str) date and time.
+    """
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 def show_comands():
     """
-    Displays the command arguements available
+
+    This method provides commands for processing the project using gromacs tool and prints the available commands
+
+
     """
     available_commands = ['init', 'help', 'importfiles', 'createtopology', 'createwaterbox', 'neutralisecomplex', 'minimize']
     print "Available commands : \n"
@@ -47,7 +85,8 @@ def show_comands():
 def main():
     # Get the arguments list
     cmdargs = str(sys.argv)
-    # check if config file exist in the working dir
+
+    # Check if config file exist in the working dir.
 
     files_list = os.listdir(CURRENT_PATH)
     is_config_file_avaliable = False
@@ -60,6 +99,7 @@ def main():
 
 
 
+    # Creating a object to the ProteinLigMin class
     obj = ProteinLigMin(
         ligand_file='ligand.gro',
         ligand_topology_file='ligand.itp',
@@ -69,14 +109,14 @@ def main():
         quiet=False
     )
 
-#
+    #
     if 'init' in cmdargs:
         if is_config_file_avaliable:
             print "ERROR! You can't start project in this directory"
             exit()
         print "Lets start the project"
 
-        # check and create folder rsquarelabsProjects in $HOME
+
         project_data = {}
         project_data["title"] = ""
         project_data["tags"] = ""

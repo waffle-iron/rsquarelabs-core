@@ -1,5 +1,7 @@
 # Developer Docs
 
+Docs file developers to setup and understanding the code
+
 [Use Cases](usecases.md) | [Developer Setup](setup.md)
 
 
