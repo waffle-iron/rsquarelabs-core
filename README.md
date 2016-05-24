@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/rsquarelabs/rsquarelabs-core.png?label=ready&title=Ready)](https://waffle.io/rsquarelabs/rsquarelabs-core)
 # rsquarelabs-core
 
 [![Build Status](https://travis-ci.org/rsquarelabs/rsquarelabs-core.svg?branch=dev)](https://travis-ci.org/rsquarelabs/rsquarelabs-core)
